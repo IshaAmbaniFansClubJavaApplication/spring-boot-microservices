@@ -1,0 +1,5595 @@
+Postman related example application
+how to write the postman related application in spring boot one sample application
+----------------------------------------------------------------------------------:
+required things
+----------------:
+we can create the project by using spring initilizer/STS 
+but here am using spring initilizer
+here am using spring boot version is 1.5.9
+Required Maven dependies
+-----------------------
+we can keep below things in pom.xml file here we can keep dependencies or the our application related jars 
+1)spring boot starter
+2)spring web
+3)spring jpa
+4)oracle related jar (this is commersial jar that's why we can add manually here we can bellow command )
+ <dependency>
+<groupId>com.oracle</groupId>
+<artifactId>ojdbc6</artifactId>
+<version>1.0</version>
+<scope>system</scope>
+<systemPath>D:\simha\jars\ojdbc14-10.2.0.2.0.jar</systemPath>
+</dependency>		
+	above is the system path 
+	here we can create packages of the application
+	1)main package of the application
+	i)automatically genereted one packages related application
+	ii)we can created the some sub or another packages of the parent package when we can create the child of the main package of the application that time not required the put the external of the package name  , when we can put the external package means different packages that time we can put the external package names in main class of the applcation 
+	now am using only child package the of main package that's why no need keep another package name in our amin application
+	
+1)our main package related data
+-------------------------------
+	package spring.booot.app.sms.springbootappsms;
+   ----------------------------------------------------------------------   we can observe these lines 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringBootAppSmsApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringBootAppSmsApplication.class, args);
+		System.out.println("started");
+	}
+
+}
+2)Conrtooler related Data here
+-----------------------------
+package spring.booot.app.sms.springbootappsms.controller;
+------------------------------------------------------------------------------
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import spring.booot.app.sms.springbootappsms.entities.User;
+import spring.booot.app.sms.springbootappsms.repository.UserRepository;
+
+@RestController
+public class UserController {
+
+	@Autowired
+	private UserRepository userRepository;
+	@RequestMapping("/usersave")
+	public void userSave(@RequestBody  User user) {
+		System.out.println("before Save");
+		userRepository.save(user);
+		System.out.println("after save");
+	}
+}
+// how to give the values in postman goto diagram --->post related diagram and see the values how to give the values in the postman 
+
+// in our application we can give the values in User class related information directly in total call by using post method (with using postman/swagger herre am using Postman)
+@RequestBody whenever we can give the values of thee total applcation user related that time we can use the @RequestBody
+this annotation is we can retrive the total information of the User.java (this one is we can keep User.java related total information )
+3)Repository related
+------------------------
+package spring.booot.app.sms.springbootappsms.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import spring.booot.app.sms.springbootappsms.entities.User;
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+}
+
+goto daigrams --->postman related our applcation one is get this is not good but purpose am simply using get when we can use get it will show the information of the properties this is secure the annd also it will send the limated data of the application by using get less secure and second is post whenever we can use the post but not shows the data of the applcation because not shoows any where or the properties on the browser is more secure and it will send the data compare to get more 
+that's why lot's of Software persons prefor to post only when we can send / save / any secure data is there that time we can use the post only but not use the get but we can preper the get when when we can fetech the data that time we can use the get 
+lot of companies now a days more suppored to JSON Format 
+
+we can keep the properties file in database related information  not only database we can give any number information here but now am using here Database related information
+----------------------------------------------------------------
+EXAMPLE :
+#server-port number
+server.port=1234
+# create and drop tables and sequences, loads import.sql
+#spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.hibernate.ddl-auto=update
+# Oracle settings
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521:XE
+spring.datasource.username=system
+spring.datasource.password=admin
+#hibernate config
+spring.datasource.driver.class=org.hibernate.dialect.OracleDialect
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.show-sql=true
+
+
+#here we can give the another example
+# logging
+#logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n
+#logging.level.org.hibernate.SQL=debug
+
+we can run the our applcation
+------------------------------:  
+here main() method of the application
+
+
+output
+------ :  
+open the postman 
+POST : http://localhost:1234/usersave
+   none    Form-data    raw   binary 
+   -----   ---------    ----   ------
+   we can select the raw 
+   
+{   "userId" : 1003,
+	"userFirstName":"pani",
+	"userLastName":"Simhadri"
+}
+// same as here we can give the values in JSON format in postman this values it can goes to the controller class and save the this values based on the RequestBody annotation  
+//internally it willwork the PrepareStament interface it can be work
+output
+---------
+before Save
+Hibernate: 
+    select
+        user0_.user_id as user_id1_0_0_,
+        user0_.user_first_name as user_first_name2_0_0_,
+        user0_.user_last_name as user_last_name3_0_0_ 
+    from
+        user_info user0_ 
+    where
+        user0_.user_id=?
+Hibernate: 
+    insert 
+    into
+        user_info
+        (user_first_name, user_last_name, user_id) 
+    values
+        (?, ?, ?)   /// internally PrepareStament it can work  because of each and every values it can be having the ? (question mark only )
+		
+after save
+before Save
+Hibernate: 
+    select
+        user0_.user_id as user_id1_0_0_,
+        user0_.user_first_name as user_first_name2_0_0_,
+        user0_.user_last_name as user_last_name3_0_0_ 
+    from
+        user_info user0_ 
+    where
+        user0_.user_id=?
+Hibernate: 
+    insert 
+    into
+        user_info
+        (user_first_name, user_last_name, user_id) 
+    values
+        (?, ?, ?)
+after save
+
+we can open the SQL 
+--------------------
+SQL>conn <username/password>
+SQL>conn system/admin
+we can desc of the 
+desc user_info
+----------------
+
+SQL> desc user_info;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ USER_ID                                   NOT NULL NUMBER(19)
+ USER_FIRST_NAME                                    VARCHAR2(10 CHAR)
+ USER_LAST_NAME                                     VARCHAR2(10 CHAR)
+
+select * from user_info
+------------------------
+SQL> select * from user_info;
+USER_ID              USER_FIRST                               USER_LAST_NAME
+---------            ----------                               ---------------  
+ 1001 					Ganesh                                   Hedge
+ 1002                   pani                                     Simhadri
+
+ above the application is by using POST it can be save the information or save the data
+ by using GET it can be fetch the data from databse to postman or browser here first give hard code of the number 
+ by using below code to give
+ in this applcation we can modify only two classes 
+ 1)Controller class we can add another controller of the method based on business logic 
+ 2)this is we can add the repository interface 
+
+here we can add the List<User> getDetails() method
+---------------------------------------------------
+package spring.booot.app.sms.springbootappsms.controller;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import spring.booot.app.sms.springbootappsms.entities.User;
+import spring.booot.app.sms.springbootappsms.repository.UserRepository;
+@RestController
+public class UserController {
+	@Autowired
+	private UserRepository userRepository;
+	@RequestMapping("/usersave")
+	public void userSave(@RequestBody  User user) {
+		System.out.println("before Save");
+		userRepository.save(user);
+		System.out.println("after save");
+	}
+	@RequestMapping(value="/getuser",  method = RequestMethod.GET)
+	public List<User> getUserDetails(){
+		int id=1001;//here we can give the values manually means hard values(herre fixed values this is not good approach we can give the values whenever we can give the values in browser that value takes and give the result that's why we can write another program also 
+		System.out.println("getUserDetails Before");
+		List<User> userDetail =userRepository.getUserDetail(id);
+		System.out.println("getUserDetails After");
+		return userDetail;
+	}
+}
+2)here we can modify the 
+package spring.booot.app.sms.springbootappsms.repository;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import spring.booot.app.sms.springbootappsms.entities.User;
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+	@Query("Select u from User u  where u.userId=?")
+	public List<User> getUserDetail(long id);
+}
+we can give the url of the our applcation
+--------------------------------------
+1)browser
+---------------
+http://localhost:1234/getuser
+ressult:
+--------
+[{"userId":1001,"userFirstName":"Ganesh","userLastName":"Hedge"}]
+
+below we can use the postman and we can give the url in postman
+----------------------------------------------------------------
+http://localhost:1234/getuser
+
+[
+    {
+        "userId": 1001,
+        "userFirstName": "Ganesh",
+        "userLastName": "Hedge"
+    }
+]
+
+out put in hibernate console:
+----------------------------
+  select
+        user0_.user_id as user_id1_0_,
+        user0_.user_first_name as user_first_name2_0_,
+        user0_.user_last_name as user_last_name3_0_ 
+    from
+        user_info user0_ 
+    where
+        user0_.user_id=?
+getUserDetails After
+@RequestMapping : it can be read the 
+here  we can use @RequestParam 
+what is the difference between PathVariablle and RequestParam ?
+--------------------------------------------------------------
+@RequestMapping
+(value="/demo/{id}" , method-RequestMethod.GET)  //here id is PathVariable 
+//1)public String demo(@RequestParam("str") String str){
+public String demo(@RequestParam(value="filter",required=false,defaultValue="") Strinng filter,@PathVariable("id") String id){// here @PathVariable it's will come to along with browser
+System.out.println("Request Param Value:" +filter);
+System.out.println("Path Param Value:" +id);
+
+return "success";
+}
+in postman
+GET : http://localhost:8080/demo/1(here "1" is path variable direct it will take )
+  http://localhost:8080/demo/1?filter=this is filter     Query param is always it will start with ? (Question mark )(RequestParam)
+  http://localhost:8080/demo/this-is--path-variable?filter=this is request filter value
+  
+  output shows only 
+  ------------------
+  success
+  
+  goto 
+ here @RequestParam whenever we can use this RequestParam we can give the values after using ? and  also give the sam as id of the whatever we can give the value in Controller class same as we can give that time it's possible to work the  and also it can be read the values of the whhatever we can give the broowser that values it can be read both are different that time it can't be read the values in this senario using am using "id" we can give the values here below URI : http://localhost:1234/getuser?id=1001
+  @RequestMapping(value="/getuser}" ,  method = RequestMethod.GET) ---> booth id's are same that time it can be work other wise not work because not read the values of the related 
+	public List<User> getUserDetails(@RequestParam(defaultValue="Ganesh") Long id){
+	                                  ----------------------------------    ------    >
+    	System.out.println("getUserDetails Before");
+		List<User> userDetail =userRepository.getUserDetail(id);
+		System.out.println("getUserDetails After");
+		return userDetail;
+	}
+  
+  2)here by using @PathVariable 
+what is the @PathVariable here : this path variable it can be read the data  
+ PathVariable URL :										RequestParam URL
+ ---------------------                                   -------------------------
+ http://localhost:1234/getuser/1001                      http://localhost:1234/getuser?id=1001
+ we can abserve the both URL's some difference is there 
+ by using PathVariable we can give the value         here by using RequestParam we can give the values of the  bbut not
+ in directly                                         direct heree here we can use whatever we can using the  RequestParam
+                                                     value here means in the browser also we can give that time it's possible to work otherwise it not possible  to work here 
+													 
+													 
+we can changes in UserRepository interface 
+package spring.booot.app.sms.springbootappsms.repository;
+
+import java.util.List;
+import org.springframework.data.repository.query.Param;
+
+import javax.websocket.server.PathParam;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import spring.booot.app.sms.springbootappsms.entities.User;
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+	
+	@Query("Select u from User u  where u.userId=?")
+	public List<User> getUserDetail(@Param("id")  final long id);
+}// above the @Param is it can be read the values of the 
+// method parameters be bound to a query via a named parameter
+
+here update the values of the our applicaation  based on using  below code 
+-------------------------------------------------------------------------
+//here we can call the 
+here we can use the @Query annotation that annotation we can fetch the record on the table through database 
+whenever we can write the @Query annotation
+
+
+here we can use @Query annotation
+what is use @Query annotation
+-----------------------------
+1)@Query annotation used for defining custom queries in Spring Data JPA
+2)Supports JPQL(Java Persistance Query Language)/SQL 
+3@Param in method arguments to bind query parameters
+4)Supports SpEL Expressions
+5)Like Expressions supported inside @Query annotation
+
+@Query Annotation
+-----------------
+1)When you can not use the query methods to perform database operations, @Query could be used to write the more flexible query to fetch data.
+EX:1
+Query query = session.createQuery("select s.empId, s.name, s.salary from Salary s ");
+Iterator sal = query.iterate();
+
+above we can use the Query(I) methods  based on that Query(I) methood we can fetch the records on the database table 
+int he above the application we can use the Query Interface methods 
+use that methods we can fetch the records on databse table
+here we can use the @Query annotation
+--------------------------------------
+	@Query("select u from User u where u.userId=:userId")
+   List<User> fetchById(@Param("userId") Integer userId);
+above the method we can use the @Query annotation we can it can be fetch the records on the database table
+Query Interface and @Query annotation
+-------------------------------------     ...........> doubt's
+
+2)@Query annotation supports both JPQL and native SQL queries.
+3)By default, @Query annotation will be using JPQL to execute the queries. If you try to use the normal SQL queries, you would get the query syntax error exceptions.
+4)If you want to write native SQL queries, set the nativeQuery flag to true. Also pagination and dynamic sorting for native queries are not supported in spring data jpa.
+5)	
+
+ 
+update the record 
+that time mandotary to use primary key related column and whatever we can update that columns that update columns here we can put this interface UserDao(I)
+ 
+we can uppdate the record in spring boot application  below code we can write the controller class only 
+-----------------------------------------------------
+@RequestMapping(value="/getuserupdate/{id}/{firstname}" ,method = RequestMethod.PUT)
+	public void getUserUpdate(@PathVariable long id,@PathVariable String firstname){
+		System.out.println("hi bean of the application ");
+		System.out.println("updated record");
+	}
+	we can write the code in Repository   interface only  below code only 
+	-----------------------------------------------------------------------
+	
+import java.io.PrintWriter;
+import java.util.List;
+import org.springframework.data.repository.query.Param;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
+import javax.transaction.Transactional;
+import javax.websocket.server.PathParam;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import spring.booot.app.sms.springbootappsms.entities.User;
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+	@Modifying
+	@Transactional
+	@Query("UPDATE User u set u.userFirstName=:firstname  where u.userId=:id")
+	public void updateUserData(@Param("firstname") String firstname ,@Param("id") long id);
+}	
+	here main we can write the @Transactional annotation here because of the here we can modify some Transactional come recode here only that's why we can put the code here only here our main theam is we can doing something here only that's why we can write the some code here only  that's annotation is called as a Transactional annotationhere only without usiing this annotation  we can't do work the any Transactional 
+	without using Transactional annotation  only select operations means DDL commands only when we can write the DML operations must and should be we can write the Transactional annotation here 
+	(manaku ikkada Transactional annotation lekunda amijaragadu  Transactional ga idi oka DML Command kavuna ade DDL commands ki Transactional annotation avasaram ledu amaina modification cheyali ante manaku kavali amiti ante Transactional annotationonly )
+	
+
+output
+------
+started
+2019-04-08 14:51:26.340  INFO 13024 --- [nio-1234-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring FrameworkServlet 'dispatcherServlet'
+2019-04-08 14:51:26.340  INFO 13024 --- [nio-1234-exec-1] o.s.web.servlet.DispatcherServlet        : FrameworkServlet 'dispatcherServlet': initialization started
+2019-04-08 14:51:26.379  INFO 13024 --- [nio-1234-exec-1] o.s.web.servlet.DispatcherServlet        : FrameworkServlet 'dispatcherServlet': initialization completed in 39 ms
+hi bean of the application 
+Hibernate: 
+    update
+        user_info 
+    set
+        user_first_name=? 
+    where
+        user_id=?
+updated record
+
+
+
+Delete the perticuler Record based on the UserId
+------------------------------------------------
+whenever we can get the below Exception
+
+----------------------------------------
+when we can give the perticuler url : DELETE http://localhost:1234/userdelete(go and see the Delete related diagram 
+
+{
+    "timestamp": 1554717019107,
+    "status": 500,
+    "error": "Internal Server Error",
+    "exception": "org.springframework.dao.InvalidDataAccessApiUsageException",
+    "message": "org.hibernate.hql.internal.QueryExecutionRequestException: Not supported for DML operations [delete from spring.booot.app.sms.springbootappsms.entities.User uf where uf.userId= ? ]; nested exception is java.lang.IllegalStateException: org.hibernate.hql.internal.QueryExecutionRequestException: Not supported for DML operations [delete from spring.booot.app.sms.springbootappsms.entities.User uf where uf.userId= ? ]",
+    "path": "/userdelete"
+}
+
+
+whenever we can get the error above that time we can put the annotation is called as @Modifying we can keep that time we won't get the exception
+what is the use of the Modifying annotation here what do work here 
+ 
+ what is Modifying annotation ?  
+ ------------------------------
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ The @Modifying annotation is used to enhance the @Query annotation to execute not only SELECT queries but also INSERT, UPDATE, DELETE, and even DDL queries.
+Let’s play with this annotation a little and see what it’s made of.
+First, let’s see an example of a @Modifying UPDATE query:
+Modifying annotation it can be work in the DDL Command's and DML commands also  
+plcase check the this site is better from curd operations : https://www.baeldung.com/spring-data-jpa-modifying-annotation
+=========================================================================================================================
+
+output
+---------
+Hibernate: 
+    delete 
+    from
+        user_info 
+    where
+        user_id=?
+delete the record based on the user id
+
+
+					
+
+Transactional Management in the spring boot applcation ?
+---------------------------------------------------------
+1) Transactionality 
+					
+
+					SessionManagement
+					---------------
+We will look at some important Objects and their scopes 
+
+
+
+
+
+					
+What is SessionManagement?
+					
+
+
+					
+here we can using another project name is MyProject
+----------------------------------------------------
+we can select the Web,JPA,Actuator,MYSQL<here by default having in the sppting initilizer> but in our project we can using SQL that's why we can add the manually of the jar file in our applcation in pom.xml file
+@Entity
+public class Customer{
+@Id
+private int id;
+private String name;
+private String issue;
+private String issueId;
+privatee String age;
+//setter and geteers
+
+}
+@Repository
+  public interface CustomerDTO extnds CurdRepository<Customer,Integer>{
+  }
+
+  public CustomerService{
+  @Autowired 
+  private CustomerDTO customerDto;
+  
+  String line="";
+  public void saveCustomerData(){
+  try{
+  BufferedReader br = new BufferedReader(new FileReader("src/main/resources/MytutorialFile.csv");
+  while((line=br.readLine())!==null){
+  String[] data=line.split(");
+  Customer c =neww Customer();
+  c.setName(data[0]);
+  c.setIssue(data[1]);
+  c.setIssueId(data[2]);
+  c.setAge(data[3]);
+  customerDto.save(c);
+  
+  }
+  catch(FileNotFoundException ex){
+  
+  }
+
+}
+//Cont roller Class
+@RestController
+public class Controller{
+
+@Autowired
+private CustomerService cs;
+
+@RequestMapping(path="feedCustomerData")
+public void setDataInDB(){
+cs.saveCustomerData();
+  }
+
+}
+
+
+
+
+
+how to use the docker in spring boot application 
+-----------------------------------------------------
+first install the Docker in windows/Linux/Mac/Unix 
+first we can start the Docker  
+
+we can create the project in the Spring Initilizer
+we need to add "web" enough 
+after we can configure the eclipse or eclipse application
+we can create the package
+ the package name is resource this is child package of the main package 
+ 
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3)here we can read the values in browser values 
+-----------------------------------------------:
+
+
+
+
+
+
+Spring boot Session  Management  ?
+--------------------------------
+Http protocol is a stateless protocol all requests and responses are independent .
+this is achived using  session management.
+it's a mechanisam used by the web container to store the session 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+
+what is different between  Restful Api and SOAP both are webservies  ?
+--------------------------------------------------------------------
+now a days why the prefor to restful Api  ?
+-------------------------------------------
+
+what is different between  Restful Api and SOAP both are webservies  ?
+------------------------------------------------------------------
+No.				SOAP																			REST
+---       -------------------------------------------                 --------------------------------------------
+1)	SOAP is a protocol.												REST is an architectural style.
+2)	SOAP stands for Simple Object Access Protocol.					REST stands for REpresentational State Transfer.
+3)	SOAP can't use REST because it is a protocol.					REST can use SOAP web services because it is a 	
+                                                                	concept and can use any protocol like HTTP, SOAP.
+4)	SOAP uses services interfaces to expose the business logic.	    REST uses URI to expose business logic.
+5)	JAX-WS is the java API for SOAP web services.	                JAX-RS is the java API for RESTful web services.
+6)	SOAP defines standards to be strictly followed.             	REST does not define too much standards like SOAP.
+7)	SOAP requires more bandwidth and resource than REST.	        REST requires less bandwidth and resource than SOAP.
+8)	SOAP defines its own security.	                                RESTful web services inherits security measures
+                                                                    from the underlying transport.
+9)	SOAP permits XML data format only.	                            REST permits different data format such as Plain
+                                                                    text, HTML, XML, JSON etc.
+10)	SOAP is less preferred than REST.	                            REST more preferred than SOAP.
+11)SOAP is amessage exchange format. 								REST is an architectural style. 
+12)SOAP Sample Implementation : XML over SOAP over HTTP             RESTful Sample Implementation : JSON over HTTP
+13)SOAP services are more complex toimplement and more              REST is built over simple HTTP protocol.     
+complex to consume
+14)SOAP basedreads cannot be cached								    REST reads can be cached,
+15)Compare to rest  SOAP is not scalability   						REST has better performance and scalability. 
+REST permits many different data formats (JSON is the most popular choice) whereas SOAP only permits XML
+16)SOAP is support the only XML format data only                    REST is supported the number of format data 
+  but not supported the  another remmaining data 					more popular in JSON format it supported
+  EX: does not suppored the JSON format data                        EX: max it suppored the JSON and text and XML 
+																	another format also it can be suppored
+17)  
+  
+                         Web Services
+						 ------------
+						 
+				SOAP                     Restful
+               JAX-WS                    JAX-RS	
+EX:
+more useful to Ecomrse applicaations it's useful to work
+ getProduct(){
+ business logic   go to Daagram --->getProduct
+ 
+ Consumer ---> Interface---->Implementation
+
+
+
+			   
+
+
+
+
+what is WSDL ?
+WSDL means Web Services Description Language-->
+WSDL is an XML-Based file which basically tells the client applcation  what the webservies does.
+it's known as the Web Services Description Language(WSDL) 
+Structure of a WSDL Document
+----------------------------
+1)A WSDL document is used to describe a web service. 
+2)This description is required, so that client applications are able to understand what the web service actually does.
+
+
+
+
+
+
+ how to know SOAP is a protocol only ?
+ how to know REST is an architectural style only ?
+ how fo recogniize the REST can use SOAP web services because it is a concept and can use any protocol like HTTP, SOAP ?
+ how to say SOAP uses services interfaces to expose the business logic ?
+ how to say this REST uses URI to expose business logic ?
+ how to say JAX-WS is the java API for SOAP web services ?
+ how to JAX-RS is the java API for RESTful web services ?
+ how to say SOAP is amessage exchange format ?
+ how to say REST is an architectural style ?
+ how to know REST reads can be cached ?
+ how to know REST has better performance and scalability ?
+ how to know REST is built over simple HTTP protocol ?
+ how to  defines its own security  compare to Restful?   
+ 
+
+SQL goto this site 
+https://youtu.be/NO3pqyKnW1Q
+
+what is self join in sql ?
+-------------------------
+Jioing a Table with itself is called as Self Join   
+Self Join is not a different type of JOIN .
+-->joining a table with itself -self join
+-->Self Join can be classified as 
+     1)Inner self join
+	 2)Outer self join(left ,right and full)
+	 3)Cross self join
+here am using the two tables 
+1)tblEmployee and tblDepartments these two tables 
+
+	 Employee Table 
+	 --------------- (having these columns of the table)                 Out put as 	
+	 EmployeeId      Name      ManagerId                               Employee          Manager
+	 ----------      ----      ---------                               ---------         --------
+	   1             Mike        3                                        Mike            Todd
+	   2             Rob         1                                        Rob             Mike 
+	   3             Todd        null                                     Todd            Null
+	   4             Ben         1                                        Ben             Mike
+	   5             Sam         1                                        Sam             Mike
+	   the main purpose is the tbale is it can be show the employee name and Manager Name based on the id's 
+	1)   Above the Employee table based on this table we can get the result in side table
+	   Employee table Mike is employee name of the table mike employeeID is "1" but here manager id "3" 
+	   based on this manager id it get the out put is  Mike managerr is Todd 
+      2)Rob is Employee but managerID is 1 means what Rob manager is Mike here
+      3)Todd is Employee 	  in the one table having Managerid and  EmployeeId both Id's are having in same Table 
+	4)in the above table 
+Left Outer Join Related operation 
+---------------------------------
+select E.Name as Employee ,M.Name as Manager 
+ from tblEmployee E
+ LEFT JOIN tblEmployee M
+ on E.ManagerID = M.EmployeeID
+ 
+ Inner Self JOIN
+ ---------------
+ select E.Name as Employee,M.Name as Managerr
+ from tblEmployee E
+ Inner Join tblEmployee M 
+ on E.ManagerID = M.EmployeeID
+ 
+ -->Cross Self join ---
+ -------------------
+ select E.Name As Employee ,M.Name as Manager
+ From tblEmployee E
+Cross Join tblEmployee M
+
+how to select the total deptno /   emplyee names  any one by using count key word
+here shoows the totally deptno wise 
+ SQL>select deptno from emp;
+ 
+ 
+SQL> select deptno from emp;
+
+    DEPTNO
+----------
+        20
+        30
+        30
+        20
+        30
+        30
+        10
+        20
+        10
+        30
+        20
+        30
+        20
+        10
+        50
+18 rows selected.
+
+we can use total deptno number count that time we can shows the totally deptno  wise  
+
+SQL> select count(deptno) from emp;
+
+COUNT(DEPTNO)
+-------------
+           15
+		   
+What is Group by Clause in sql ?
+---------------------------------
+1)The GROUP BY Statement in SQL is used to arrange identical data into groups with the help of some functions. i.e if a particular column has same values in different rows then it will arrange these rows in a group.
+2)Group by clause is used to group a selected of rows intoa set of summary rows by the values of one or more columns or expressions. it's always used to in conjuction with with one or more aggregation functions 
+Important Points:
+-----------------
+GROUP BY clause is used with the SELECT statement.
+In the query, GROUP BY clause is placed after the WHERE clause.
+In the query, GROUP BY clause is placed before ORDER BY clause if used any.		   
+        City           Total Salary 
+		----           ------------
+		London			27000
+		New York		15500
+		Sydeny 			12000
+		
+		SQL>select City,Sum(Salary) As Total Salary From tblEmployee Group by city 
+		note:if you Omit, the group by clause and try to execute the query , you get an error 
+		"Column 'tblDepartments.City' is invalid in the select list because it is not contained in either an aggregation function or the Group by Clause".
+		
+		How to select the perticuler column Data in emp table 
+		------------------------------------------------
+SQL>select ENAME from emp; // here based on ename
+SQL>select DEPTNO from emp;  // here based on deptno
+how to show the sum of total salary in sql ?
+SQL> select sum(sal) from emp;
+  SUM(SAL)
+----------
+     36025
+i don't want total salary paid by deptno                (some doubt's )
+SQL>select deptno,sum(SAL) from Emp;  
+ERROR at line 1:
+ORA-00937: not a single-group group function  
+because of sum(sal) here sum having the group of the sum deptno (here sum is working in not only one row it can be work in some column data (sum is working in sum groups rows here we can take the deptno the deptno having same deptno (same deportant numbers that's why we can working deptno 
+EX: same dept working in some employee's but here also having empid different we will take one colleage 
+having number of deportant's but each employee having unique id 
+each dept having some employee's 
+when ever we can use the sum clause this clause but not working single row it can be working multiple row (multiple means group -->multiple same dept number rows means one group 
+each dept it will take the one group 
+that's why sum is not working single row operations it can be working in multiple rows at a time 
+why means it can be design the Oracle corporation persons only 
+
+here shows the sum of salary based on the job -->
+Select job ,sum(sal) from emp Group by Job
+SQL> Select job ,sum(sal) from emp Group by Job;
+
+JOB          SUM(SAL)
+---------- ----------
+CLERK            7650
+SALESMAN         5600
+PRESIDENT        5000
+ ANALYST         2500
+MANAGER          9275
+ANALYST          6000
+
+6 rows selected.
+
+
+
+
+ 
+            
+        how to select the sum salary based on deptno ?
+		---------------------------------------------
+SQL> select   SUM(SAL) As TotalSalary From emp Group by deptno order by count(deptno);
+
+TOTALSALARY
+-----------
+       5000
+       2000
+       8750
+      10875
+       9400
+
+how to select the sum salary based on deptno wise ?
+----------------------------------------------------
+SQL> select  deptno, SUM(SAL) As TotalSalary From emp Group by deptno order by count(deptno);
+
+    DEPTNO TOTALSALARY
+---------- -----------
+                  5000
+        50        2000
+        10        8750
+        20       10875
+        30        9400
+above query it can shows the each deptno how much salary having 
+below show the desc order shows
+SQL> select  deptno, SUM(SAL) As TotalSalary From emp Group by deptno order by count(deptno) desc;
+
+    DEPTNO TOTALSALARY
+---------- -----------
+        30        9400
+        20       10875
+        10        8750
+        50        2000
+                  5000
+Filtering Groupps 
+----------------
+Group by multiple Columns                                            Using multiple Aggregation functions
+-----------------------------                                            --------------------------------
+City      Gender        TotalSalary                     City    Gender  TOTALSALARY   TotalEmployees
+-----   -----------      -----------                    -----   -------  ----------   ---------------
+London      Male          27300							London    Male		27300		5
+New York    Female		  85000							New York  Female	85000		2
+New York    Male		  70000							New York  Male		70000		1
+Sydeny      Female		  48000							Sydeny	  Female	48000		1
+Sydeny      Male		  28000							Sydeny    Male		28000		1
+
+above only one row only selected but below we can select two rows at a time 
+SQL>select deptno,sum(SAL) from  emp group by deptno (here small hint:whenever we choose the group by <column_name> that column nname we can put the our select operation otherwise we will get the error
+SQL> select deptno,sum(SAL) from  emp group by Job;
+            ------                             ---
+select deptno,sum(SAL) from  emp group by Job
+       *
+ERROR at line 1:
+ORA-00979: not a GROUP BY expression
+
+both we can give same that time we can't get the any error 
+SQL> select deptno,sum(SAL) from  emp group by deptno;
+            ------                             ------
+
+    DEPTNO   SUM(SAL)
+---------- ----------
+        30       9400
+                 5000
+        20      10875
+        50       2000
+        10       8750
+SQL>select city,Gender,sum(salary) as TOTALSALARY from tblEmployee Group by City ;
+we will get compile time error 
+Column 'tblEmployee.Gender' is invalid in the select list because it is not contained in either an aggregation function or the GROUP BY clause.
+
+SQL>select city,Gender,sum(salary) as TOTALSALARY from tblEmployee Group by City,Gender ;
+
+City      Gender        TotalSalary                    
+-----   -----------      -----------                   
+London      Male          27300							
+New York    Female		  85000							
+New York    Male		  70000							
+Sydeny      Female		  48000							
+Sydeny      Male		  28000							
+
+here am using emp table we can select more than one column by using group by clause
+
+SQL>Select Job,HIREDATE,SUM(SAL) from emp group by job,HIREDATE
+
+ SQL> Select Job,HIREDATE,SUM(SAL) from emp group by job,HIREDATE;
+
+JOB        HIREDATE    SUM(SAL)
+---------- --------- ----------
+SALESMAN   20-FEB-81       1600
+SALESMAN   28-SEP-81       1250
+SALESMAN   08-SEP-81       1500
+ANALYST    03-DEC-81       3000
+CLERK      03-DEC-81        950
+MANAGER    20-FEB-81       1000
+CLERK      17-DEC-80        800
+MANAGER    01-MAY-81       2850
+PRESIDENT  17-NOV-81       5000
+SALESMAN   22-FEB-81       1250
+MANAGER    09-JUN-81       2450
+
+JOB        HIREDATE    SUM(SAL)
+---------- --------- ----------
+CLERK      10-DEC-83       2000
+MANAGER    02-APR-81       2975
+ANALYST    19-NOV-96       3000
+CLERK      23-DEC-96       2600
+CLERK      23-JAN-82       1300
+ ANALYST   23-DEC-96       2500
+
+17 rows selected.
+
+above the query how many columns are selected that columns we can give the group by clause also that time we can get the result otherwise we will get the error
+ SQL>select City ,Gender,Sum(Salary) AS TOTALSALARY from tblEmployee  group by City,Gender order by City
+ 
+ 
+City      Gender        TotalSalary                    
+-----   -----------      -----------                   
+London      Male          27300							
+New York    Female		  85000							
+New York    Male		  70000							
+Sydeny      Female		  48000							
+Sydeny      Male		  28000
+
+
+
+ SQL>Select Job,HIREDATE,SUM(SAL) 
+  from emp 
+  group by job,HIREDATE
+  order by JOB
+
+SQL> Select Job,HIREDATE,SUM(SAL)
+  2    from emp
+  3    group by job,HIREDATE
+  4    order by JOB
+  5  /
+
+JOB        HIREDATE    SUM(SAL)
+---------- --------- ----------
+ ANALYST   23-DEC-96       2500
+ANALYST    03-DEC-81       3000
+ANALYST    19-NOV-96       3000
+CLERK      17-DEC-80        800
+CLERK      03-DEC-81        950
+CLERK      23-JAN-82       1300
+CLERK      10-DEC-83       2000
+CLERK      23-DEC-96       2600
+MANAGER    20-FEB-81       1000
+MANAGER    02-APR-81       2975
+MANAGER    01-MAY-81       2850
+
+JOB        HIREDATE    SUM(SAL)
+---------- --------- ----------
+MANAGER    09-JUN-81       2450
+PRESIDENT  17-NOV-81       5000
+SALESMAN   20-FEB-81       1600
+SALESMAN   22-FEB-81       1250
+SALESMAN   08-SEP-81       1500
+SALESMAN   28-SEP-81       1250
+
+17 rows selected.	
+		
+		here am using order by clause by default assending order 
+
+how to count the total employee in the tblEmployee
+SQL>slect * from tblEmployee
+show the total columns data 
+i want count the total number of recors in the table that time we can use the cout variable 
+SQL>select count(*) from tblEmployee;
+  COUNT(*)
+----------
+        18
+
+SQL>select count(*) from emp;
+SQL> select count(*) from emp;
+
+  COUNT(*)
+----------
+        18
+
+SQL>select Gender,City,SUM(SALARY) As TOTALSALARY ,Count(ID) as [Total Employee] from tblEmployee Group by Gender,City
+City       Gender           TOTALSALARY   TotalEmployees
+-----   -----------      -----------        ---------------
+London      Male          27300						5
+New York    Female		  85000						2
+New York    Male		  70000						1
+Sydeny      Female		  48000						1
+Sydeny      Male		  28000						1
+above query why the using [] squere brackets -->main theam is when we can use the space of the given logical Name(logical_name) that time we can give 
+EX:
+Count(Id) as TotalEmployee here don't required the squere bracket's 
+count(id) ad [TOTAL EMPLOYEE] here we can give the space of the name that's why we can squere bracket 
+ 
+am using emp table 
+-------------------
+SQL>select Job,HIREDATE,SUM(SAL) AS TOTALSALARY,COUNT(Deptno) as TotalEmployee from emp Group by JOB,HIREDATE
+
+SQL> select Job,HIREDATE,SUM(SAL) AS TOTALSALARY,COUNT(Deptno) as TotalEmployee from emp Group by JOB,HIREDATE;
+
+JOB        HIREDATE  TOTALSALARY TOTALEMPLOYEE
+---------- --------- ----------- -------------
+SALESMAN   20-FEB-81        1600             1
+SALESMAN   28-SEP-81        1250             1
+SALESMAN   08-SEP-81        1500             1
+ANALYST    03-DEC-81        3000             1
+CLERK      03-DEC-81         950             1
+MANAGER    20-FEB-81        1000             0
+CLERK      17-DEC-80         800             1
+MANAGER    01-MAY-81        2850             1
+PRESIDENT  17-NOV-81        5000             1
+SALESMAN   22-FEB-81        1250             1
+MANAGER    09-JUN-81        2450             1
+
+JOB        HIREDATE  TOTALSALARY TOTALEMPLOYEE
+---------- --------- ----------- -------------
+CLERK      10-DEC-83        2000             1
+MANAGER    02-APR-81        2975             1
+ANALYST    19-NOV-96        3000             1
+CLERK      23-DEC-96        2600             1
+CLERK      23-JAN-82        1300             1
+ ANALYST   23-DEC-96        2500             0
+
+17 rows selected.
+
+		
+Filtering Groupps
+------------------
+in SQL we can filter the any records in the table by using the clause is WHERE 
+by using WHERE clause we can filter any records on the table 
+EX; here we can filter the records based on the male
+select Gender,City , SUM(SALARY) as TotalSalary ,Count(id) TOTALEMPLOYEE
+from tblEmployee 
+where Gender = 'Male'
+Group by Gender,City
+City       Gender           TOTALSALARY   TotalEmployees
+-----   -----------      -----------        ---------------
+London      Male          27300						5
+New York    Male		  70000						1
+Sydeny      Male		  28000						1
+ here we can shown on the "MALE" data only 
+ same result we will get by using HAVING Clause also 
+ HAVING Class we can use the after come to groupp by clause
+ WHERE clause it will come before Grouo by Clause
+SQL>select Gender,City , SUM(SALARY) as TotalSalary ,Count(id) TOTALEMPLOYEE
+from tblEmployee 
+Group by Gender,City
+HAVING Gender = 'Male'
+City       Gender           TOTALSALARY   TotalEmployees
+-----   -----------      -----------        ---------------
+London      Male          27300						5
+New York    Male		  70000						1
+Sydeny      Male		  28000						1
+what is difference between two 
+1)select Gender,City , SUM(SALARY) as TotalSalary ,Count(id) TOTALEMPLOYEE
+from tblEmployee 
+where Gender = 'Male'
+Group by Gender,City
+ 2)select Gender,City , SUM(SALARY) as TotalSalary ,Count(id) TOTALEMPLOYEE
+from tblEmployee 
+Group by Gender,City
+HAVING Gender = 'Male'
+ 
+ here main theam is we can filter the before the group by records <just like eager loading >
+ here am selected the "Male" before goes to group by it can filter condition and check the condition and after goto group by clause 
+ having clause is just like Lazy loding concept here working first fetch the total records and after set the group by clause and after check the condition that's 
+ 1)WHERE Clause can be used with-select,insert,and Update statements,where as HAVING Clause can only be used with the select statement .
+ 2)WHERE Clause is filters rows before aggregation (GROUPING),where as,HAVING filters groups,after the aggregation are performed.
+ 3)Aggregate functions can't be used in the WHERE Clause , unless it's in a sub query  contained in a HAVING Clause,wherre as , aggrerate functions can used in HAVING clause.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+WHERE Clause is used to filter rows before aggregation, where as HAVING Clause is used to filter groups after aggregations . 
+follwing two queries produced the same result
+--------------------------------------------
+1)select City,SUM(SALARY) as TOTALSALARY				2)Select City SUM(SALARY) as TOTALSALARY
+from tblEmployee											From tblEmployee
+where city='London'											group by City 
+group by City												HAVING City = 'London'
+
+here am taking the emp table 
+-------------------------
+1)select JOB,SUM(SAL) as TOTALSALARY				2)Select City SUM(SALARY) as TOTALSALARY
+from emp											From tblEmployee
+where  JOB='CLERK'											group by City 
+group by JOB												HAVING City = 'London'
+here only it will taking the Clerk wise only (here am using the where clause it filter the data)
+total how many member's are working in clerk's total salay only here the job is having 'clerk'
+QL> select JOB,SUM(SAL) as TOTALSALARY
+  2  from emp
+  3  where  JOB='CLERK'
+  4  group by JOB
+  5  /
+
+JOB        TOTALSALARY
+---------- -----------
+CLERK             7650
+
+2)here am using HAVING Clause
+------------------------------
+SQL> select JOB,SUM(SAL) as TOTALSALARY
+  2  from emp
+  3  group by JOB
+  4  HAVING JOB='CLERK'
+  5  /
+
+JOB        TOTALSALARY
+---------- -----------
+CLERK             7650
+
+
+
+
+
+
+
+
+Note:
+From a performance standpoint, you can't say taht one method is less efficient than the other sql server optimizer analyses each statement and selects an efficient way of executing it. as a best practies,use the syntax that clearly describes the desired result.Try to eliminate rows that you wouldn't need ,as early as possible.
+
+
+
+
+
+
+
+
+
+                     
+
+
+
+
+		
+		
+		
+		
+
+
+Angular 
+--------
+https://youtu.be/5wtnKulcquA 
+Python
+------
+https://youtu.be/vaysJAMDaZw
+https://youtu.be/v_S64kldryc   (Durga)
+Jira
+----
+https://youtu.be/GnG6RPSRLCs
+
+https://github.com/TechPrimers <max having the Exampples of the some applications 
+
+Hacker Rank
+-----------
+https://youtu.be/L0r_2zQPWGQ
+
+Machine Learnning Course ?
+-----------------------
+https://youtu.be/74oUwKezFho
+
+Cyber Secure 
+--------------
+https://youtu.be/U_P23SqJaDc
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+	  
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+how to read the file by usiing Stream API ?
+------------------------------------------
+which array is better when search purpose ? a)ArrayList  b)LinkedList
+-------------------------------------------
+how to cout the each dept how many employees are there in the table :here result is dept wise each dept how many member's  empployees there 
+EX:
+it sector dept employee 100
+HR sector  dept employee 10
+same as we can print 
+HashMap internally flow and how to work in these application ?
+
+what is Dailet class in hibernate ?
+------------------------------------	 
+	The Dailet class it can be show the wich database we can use  
+	 
+by using try block 
+-------------------
+public class TestTry {
+	public static void main(String[] args) {
+	try {
+		try {
+			
+		}
+		catch(Exception e) {
+			
+		}
+	}
+	
+	catch(Exception e) {
+		
+	}
+	finally {
+		
+		
+	}
+}	
+above question each try block must and should be one catch block or finally block
+here we can use the nested try block  we can use each and every try child or parent try block's are we can use at least one catch block or finally block 
+we can't use the catch block's we will get the compile time error 
+EX 1: 
+public class TestTry {
+	public static void main(String[] args) {
+	try {
+		try {
+			
+		}
+	}
+	catch(Exception e) {
+	}
+	finally {
+	}
+}	
+	
+here we will get the comppile time error because of here we can't use the inside of the nested try block but not having the catch block that's why we will get the compile time errot
+
+EX 2:
+public class TestTry {
+	public static void main(String[] args) {
+	try {
+		try {
+			
+		}
+		catch(Exception e) {
+			
+		}
+	}
+}	
+
+here also we will get the compile time error because of the  outer try blockk but not having the catch block or finally block that's why why we will get the compile time error also  
+	
+how many number of objects are there in java Object and what is use the that methods in Object class ?
+
+what is MashMap ?
+public class HashMapConcept{
+public static void main (String args[]){
+//HashMap is a class independents Map interface
+// exxtends AbstractMap class
+// it contains only unique elements
+//stores the values - key - values pair
+// it may have one null key and multiple null values
+// it maintains no order
+// HashMap is non-synchronized means it's used in multi thread formality it can more threads access at a time 
+//fast perfomence is incrreased automatically in the system 
+// it's not thread safe 
+//problem in HashMap 
+
+
+
+// goto diagram mutlti thread concept in map -------------->
+//concurrent modification exception --Fail --Fast condition is called the concurrent modification Exception
+// whenever it can be update and add the values when the one thread is going to retriving purpose that time means in the middle of the time we can add or retrive the values that time we will get the ConcurrentModificationException this main draw back the Map 
+HashMap<Integer,String> hm = new HashMap(Integer,String>
+hm.put(1,"J2SE");
+hm.put(2,"J2SEE");
+hm.put(3,"Spring")
+// we can get the values in in map interrface by using get() method)
+System.out.println(hm.get(1));
+
+
+ }
+}
+EX 2:
+import java.util.HashMap;
+import java.util.Map;
+
+public class EmpployeeClient {
+	public static void main(String[] args) {
+		// we can get the result
+		Map<Integer, String> putValueesMap = new HashMap<>();
+		putValueesMap.put(1001, "J2SE");
+		putValueesMap.put(1002, "J2EE");
+		putValueesMap.put(1003, "JDBC");
+		putValueesMap.put(1004, "Spring Framework");
+		putValueesMap.put(1005, "Spring Boot");
+		System.out.println(putValueesMap.get(1003));
+}
+}
+
+OutPut
+------
+JDBC
+// here we can retrive the data based on the key 
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class EmpployeeClient {
+	public static void main(String[] args) {
+		// we can get the result
+		Map<Integer, String> putValueesMap = new HashMap<>();
+		putValueesMap.put(1001, "J2SE");
+		putValueesMap.put(1002, "J2EE");
+		putValueesMap.put(1003, "JDBC");
+		putValueesMap.put(1004, "Spring Framework");
+		putValueesMap.put(1005, "Spring Boot");
+		System.out.println(putValueesMap.get(1003));
+		System.out.println(putValueesMap.get(1004));// here but store the data in 4 key related what's the out put of the our application 
+		// simply comes to the output only print the null values 
+		
+}
+}
+
+OutPut
+------
+JDBC
+null
+// here we can retrive the data based on the key 
+/ here will not give any Exception like ArrayIndexOutOfBoundsException
+// because of does not store the values in based in index that why we can print the "null" value 
+//below EX : if we want print the all the values of the Map interface that time we can use the Map.Entry(interface)
+
+for(Map.Entry m : hm.entrySet()){
+System.out.println(m.getKey()+""+m.getValue());
+}
+//here we can remove the one element of the Map that time we can use remove() method in our applicaation
+//before remove() used
+System.out.println(hm);
+hm.remove(3);
+System.out.println(hm);
+// here we can removed the 3rd element of the our map
+// does not maintain the order 
+
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+public class EmpployeeClient {
+	public static void main(String[] args) {
+		// we can get the result
+		Map<Integer, String> putValueesMap1 = new HashMap<>();
+		putValueesMap1.put(1001, "J2SE");
+		putValueesMap1.put(1002, "J2EE");
+		putValueesMap1.put(1003, "JDBC");
+		putValueesMap1.put(1004, "Spring Framework");
+		putValueesMap1.put(1005, "Spring Boot");
+		System.out.println(putValueesMap1.get(1003));
+		// by using the Entry we can retrive the elements
+		for(Map.Entry retriveMapElements : putValueesMap1.entrySet()) {
+			putValueesMap1.put(1006,"Raja");// here we can add the one element in the middle of the retriving time that's why we will get error at runn timme but not compile time of the our applcation 
+			System.out.println("get key values	:"+retriveMapElements.getKey()+"	get value  :"+retriveMapElements.getValue());
+		}
+		
+	}
+}
+
+
+
+Output :
+-----------
+JDBC
+get key values	:1001	get value  :J2SE
+Exception in thread "main" java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(HashMap.java:1442)
+	at java.util.HashMap$EntryIterator.next(HashMap.java:1476)
+	class HashTableConcept{
+	public static void main(String args[]){
+	// it's similer to HashMap , but it''s synchronized
+	//it stores the values on the basis of key - value pair
+	//key -->Object --HashCode--Value
+	// the Object class having the hashCode() this hashCode is unique having value 
+	//java it provide the perticuler Object number that is 32bit int integer number
+	// this number the JVM it provide we not not generete 
+	// the hashCode it can store the one Object
+	//synchronized means thread safe 
+	// it can be work in one by  one but not simaltanislly
+	Hashtable h1 = new Hashtable();
+	h1.put(1,"Tom");
+	h1.put(2,"JDBC");
+	h1.put(3,"Oracle");
+	h1.put(4,"Java");
+	h1.put(1,"Tom");
+	h1.put(1,"Tom");
+	// creatre the clone copy / shalloww copy of the application
+	Hashtable h2 = new Hashtable();
+	h2 = (Hashtable)h1.clone();
+	//  whatever values in h1 that values are store in h2 also 
+	// because of the here using clone() // what is the clone() methood in our application the clone() is it will store the duplicate data / Object of the application 
+	System.out.println("the values from h1"+h1);
+	System.out.println("the values from h2"+h2);
+	// next we can clean the values of the hashtable
+	h1.clear();
+	// by using this method we can remove/ clean the "h1" related data totally 
+	// only it can be show the data only "h2" relateed data only 
+	//  we using contains value // what iis use of the containce ?
+	Hashtable st = new Hashtable();
+	st.put("A","Ganesh");
+	st.put("B","Manager");
+	st.put("C","Java");
+	if(st.containsValue("Manager");
+	// print all the values from Hashtable using -->Enumaration -->elements()
+	st.elements();//it fetch the elements in sequences 
+	Enumaration e = st.elements();
+		while(e.hasMoreElements()){
+		System.out.println(e.nextElement();
+		}
+	// get the all values from hashtable using -->entrySet()-->set of hashtable values :
+		System.out.println("print values from st using entry set");
+		Set s = st.setEntry();
+
+		System.out.println(s);
+	
+	
+	// check both the hashtables are equals or not
+Hashtable st1 = new Hashtable();
+	st1.put("A","Ganesh");
+	st1.put("B","Manager");
+	st1.put("C","Java");	
+	st1.put("C","Java");
+	System.out..println("values from st1 :");
+	System..out.println(st1);//          outPut: like {A=Ganesh,B=Manager,C=Java} here we can't add the duplicates and we can't raise the any erro of the applcation simply only ignore it that duplicate values 
+	// Hashtable but not allow the duplicate values and keys and but not allow the null keys and null values also 
+	// it contains only unique values 
+//whenever we add the null keys or null values that time it can be error in run time that error means NullPointerException
+st1.put(null,"Sardar");
+st1.put(1,null);
+st1.put(null,null);
+// above 3 statements are raised the exception at runn time only but not compile time 
+
+///Generics concept
+Hashtable<String,string> st3 = new Hashtable<String,String>();
+//perfomence is very slow compare to HashMap 
+//because of the Hashtable is synchronized -->synchronized means Thread safe 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+	
+	
+	
+	if(st.equals(st1)){
+	System.out.println("both are equal");
+	}
+	// get the values from key :
+	Systtem.out.println((st1.get("A");
+	// get the hashCode of the Hashtable Object
+	System.out.println("the hashcode value of st1 : "+st1.hashCode());//1787751094 random 32 bit int number JVM is given
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	what is Difference between HashMap and Hastable in the collection ?
+	---------------------------------------------------------------------
+	HashMap                                  			   	Hasptable
+	----------                                 				------------
+1)non-synchronized                           				synchronized 
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+what is agile methodology in our applicaation
+-------------------------------------------   ?
+interface A{
+
+}
+the interface keyword is used to declare interface
+
+abstract class A{
+}
+the abstract classs keyword is used to declare abstract classs .
+when we can declare the an interface ?
+Ex:we want EmpApp 
+getSalary();
+getEmpInfo();
+
+we don't knoe the development of the methods that time we will go for the interface
+you know only mehod names but u don't know the development of the that method (only know the specification of the method that time we go for interface)
+// by default every method in interface public and abstract method only no need to declare the manually to that methods 
+//no need to write the public and abstract of the before the interface
+//you know only specification of the that method you don't know the implimetation of the that methods that time we go for the interface only 
+interface EmpApp{
+getSalaryInfo();
+getEmpInfo();
+}
+
+
+
+when we can declare the an abstract  ?
+you know the implimetation of the at least one method of the applicaation of the that time we shoulld go for the abstract class
+Ex: you know the 
+getSalaryInfo(){
+--how to calculate the salary of this method that time we should go for the abstract class 
+--
+---
+}
+//main theam is we know the partially implimetation of the  applicaation that time we should go for the abstract class 
+abstract class EmpApp{
+getSalaryInfo(){
+---
+----// here we can calculate the our business logic of the applcation of the salary
+---
+}
+public abstract getEmpInfo();//here we don't know the how to implimetation of the applicaation this method that time we should go for the abstract class
+
+class A implimets EmpApp{
+// here we can override two methods only but not override only one method of the applicaation
+
+
+}
+
+class X extends EmpApp {
+//here override only one method but not override the two methods because  of already implimetation  of the one method in abstract class and here we can impliment of the one method only
+
+
+}
+
+class Object{
+// we can search the methods in eclipse based on the shortcut is shift+t (we can search 
+// how to see the methods in  that perticuler class Eclipse ide by using (control+o we can click)
+1) private static native void registerNatives();
+2) static{
+		registerNatives();
+	}
+3) 	public final native Class<?>		getClass()//get the information of the class
+      1      2     3     4    5             6     ...
+      1)public 
+		---------
+		I)it can be access Anywhere ---------->
+		 ===================================
+		  1) Within the class
+		  2) Outside the class
+		  3) In side the package
+		  4) Out side the package
+		II) final :
+		III) Native : it's non-java programming impl .
+		
+		IV) java.lang.Class (int a topic called as reflection ---->java.lang.reflection   (API))
+		
+		
+		
+		
+		
+		  
+		  
+		  
+		  
+		  
+		  
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+			  
+
+
+
+
+4) public native int hasnCode();
+      ------------------------------
+  package  com.hash.code.practices;
+	  class Student{
+	     int sid;
+		 String sName;
+		 String city;
+		 //here we can declare the Default constructure 
+		 Student(){
+		 System.out.println("Default cconstructure in Student class");
+		 }
+		 Student(int sid,String sname,String city){
+		 System.out.println("3 para const in Student");
+		 this.sid = sid;
+		 this.sName = sName;
+		 this.city = city;
+		 
+		 
+		 
+		 
+		 
+		 }
+	  public class Jtc{
+	   Student s1 = new Student(101,"Som","Delhi);
+	   Student s2 = new Student(101,"Som","Delhi");
+	   Student s3 = new Student(102,"Rai","Bangalore");
+	   System.out.println(s1);
+	   
+	   why we print in it  here s1-->what is the purpose the printing it because of the it can be print the s1 related information data on the console // some info we can give that information is having Student@1db9742 corsponding the related data
+	   EX: output is 
+	   -------------------
+	   com.hash.code.practices.Student@1db9742
+	   this is HashCode in Hexa Desimal Representation 
+	   the hashCode having Hexa Decimal Representation
+	   the value is 
+	   System.out.println(s1);
+	   
+	   System.out.println(s1.toString());
+output :
+----------
+	   com.hash.code.practices.Student@1db9742
+	   com.hash.code.practices.Student@1db9742
+both are same the output if    
+	   we not call the toString() internally automeatic call the toString() this toString() is having Object class  
+	   
+	   System.out.println(s1);
+        ---------------------
+whenever we can call s1 internally automatically called the toString()
+task :used to give the some information about the class in the Hexa Decimal representation   
+toString()
+----------
+  toString() is the method which is available inside the java.lang.Object class 
+  it's used to givve the some information about the class .
+  if you wanted to get the custom information about the class then following signature :-->
+       1)by default internal implemetation of the toString() method in a class is giving the hash code in the form of hexadecimal implemetation
+	   2) if you wnat to give some other information using toString() method then you can Override the toString() method by writing your own implemetation 
+	   public java.lang.String toString();
+	   // this method is not final that's why we can simply Override 
+	   // when having final the method but not Override the that method only 
+// here am Override the toString()
+  public String toString(){
+  return "sid: "+sid+"sName: "+sname+"city:"+city;
+  //here we can Override the toString() and here custom define class information it's will give 
+}
+System.out.println(s1);
+System.out.println(s1.toString); // goto Daigrm
+System.out.println(s2
+System.out.println(s3);
+output 
+------
+101    Som   Delhi
+101   Som   Delhi
+102   Rai   Delhi
+
+hachCode()
+----------
+System.out.println(s1.hachCode());//it's giving numaric value like 31168322
+System.out.println(s2.hachCode());// 17225372 both are different numbers it will give it's default values 
+ @Override
+ public int hashCode(){
+    return 99;
+	}
+	hachCode()
+	-----------
+	when you aree creating any Object , for all the Objects hash code will be assigned internally by the JVM.
+	On the basis of the hash code ,JVM identifies each object uniquely. for each object there will be unique generation of the hashCode() method is mainly responsible to generete the hachCode() and returns in the form of Integer,According to requirements you can overroide the hashCode() method inside your class and provide your own implemetation to generete the hashCode()
+	if you want to change the hash code generation algorithm then yoou can override the hashCode() method inside your class with the following signature by using your own alogorithm:-
+	SYNTAX :
+	public int hashCode(){
+	...
+	... our own implemetation here 
+	....
+       return ....;
+	   }
+	 hashCode() method implemetation can be given in two different ways -->
+		1)  Always return the unique hashCode.
+		2) Static implemetation with returns same hashCode again and again
+	it's always recommendable to write the hashCode() method implemetation in a such way that return unique hashCode for each Object 
+	
+	equals()
+	-----------
+	public boolean equals(java.lang.Object o){
+	// equals() method it can compare the two Object referencess
+//	this method having Object class 
+}
+  boolean bn  = s1.equals(s2);
+  System.out.pprint(bn);//out put is :false	
+  public boolean equals(Object o){
+  Student s1 = (Student)o;
+  if((s1.sid) ==(this.sid) &&(s1.sName.equals(this.sName))&&(city.equals(this.city))){
+  return  true;
+  else return false;
+  }
+    System.out.pprint(bn);
+	  System.out.pprint(s1.equals(s3));
+  //output : 
+  true
+  false
+  
+  https://youtu.be/XxMxCYMqxe8 core java equals and hashCode 
+  Contract between equals() method and hashCode() method:
+  ---------------------------------------------------
+  these two equivalent Object should be placed in same bucket but all the objects available in the same bucket many not be equals also
+  1) Two equivalent Object : must have same hashCode() i.e 
+h1.equals(h2) is true the h1.hashCode()==h2.hashCode() should return true.
+  2) if twoo  objects are not equals by equals(..) method  then there is no restriction on their hashCode,may be same or may not be same    
+  3) if hashCode of two  object are equals then these object may or may not equal by .equals method 
+  4) if hashCode of two object are not equal then these object  are always not equal by .equals method 
+ 
+to satisfy above contract between equals() method and hashCode() method whenever we are Overriding equals() and hashCode() method whenever we are Overriding equals() method compulsory we have to override the hashCode() method otherwise we won't get the compile time error or runtime error but it's not a good programmer practice . 
+  
+  notify()
+  --------
+  this method is works on logs 
+  the logs associte with objects
+  wekes up all thread taht are waiting on this object's monitor . a thread waits on an object's monitor by calling one of the methods .
+  
+  
+  https://www.guru99.com/java-class-inheritance.html
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+	
+	
+	
+	
+	
+	  
+	
+	
+	
+ 	
+		
+
+
+
+
+
+
+
+
+
+	 
+
+
+
+
+ 
+ 
+ 
+ 
+		
+	   
+	   
+	   
+	   
+	   
+	   
+	  
+	  
+	  
+	  
+4)	boolean equals(java.lang.Object o);	
+5)  public java.lang.String toString();
+//Garbage Collection
+---------------------------
+6) protected void finalize() throws java.lang.Throwable;
+7) protected native java.lang.Object clone() throws java.lang.CloneNotSupportedException
+8) public final native void notify();
+9) public final native void notifyAll();
+10) public final wait() java.lang.InterruptedException;
+11) public final wait(long) java.lang.InterruptedException;
+12) public final wait(long,int) java.lang.InterruptedException;
+13) protected void finalize() throws java.lang.Throwable;
+14) static{ };
+}
+}
+
+			Inter Thread Communication in java
+			-----------------------------------
+  how too communicated two or more than two threads are togather 
+what iis the need of two threads are communivate ?
+ two threads are how communicate  each other by using wait and notify and notifyAll methods 
+ by using these methods it can be intract with each one
+ which thread it can be requird to call wait()
+   the which is expecting updation 
+ which thread it can be requird to call notify()
+  the thread which is performming updation
+  (EX : ikkda naku na intiki oka postbox undi today naku letter vastadi ani cheppinaru but nenu intiki evening poyi 6:00 pm  chusina but raledu alage prati  30 minuts okasari chustune unna ala 6:30pl ki 7:pm ki ila night mottham chustune unna raledu but tomorrow evening vachindi anaga naku chala time waste and nidra waste kada ila time ni waste chese badulu ikkada manaku letter techi ichedi oka postman matrame kada anaga manamu ikkada oka postman ni mana controll lo means pettukunte naku letter's vachinapudu update cheyi anichepite chestadhu kada manaku ikkada time waste kadu kada 
+nenu T1 anukunte ikkada postman anevadu T2 thread anukunte saripotundi   
+  ikkada jarige lekkaprakaram T1 meas wait() anuko and T2 ante Postman anukunte saripotundi kada
+  nenu(T1 ami alocistadu amaina updates unnava ani think cheste but Postman T2  anevadu a update ni ala perfomence cheyali ani think chestadu ikkada))
+
+two threads can communicate with each other by using wait() , notify() and notifyAll() methods 
+the thread which is expecting updating is a resposible to call wait() then immediatly the thread will enter into waiting state
+ The thread which is resposible  to perform updation , after performing updation it's a responsible to call notify() when wait() thead will get that notification and continue it's a execution with those updated items 
+
+ Q) wait() , notify() and notifyAll () methods are present in which class ? 
+ A) above totally methods are precent in Object class but not in thread class 
+ Q) why these methods in precent in Object class but not in Thread class any reason behind of these methods keeping object class ?
+ A) These methods are only work in Thread related concept but these methods are not in Thread class but it can having Object  class 
+  to call wait and notify or notifyAll() methods on any Object , thread should be ownner of the that Object that is Thread should has lock of that Object that is the Thread shoube inside synchronised area
+  
+  hence we can wait() and nootify and notifyAll ()  onlly from synchrozed area other wise we will get run time Exception saying 
+  RE: IllegalMonitorException 
+  1) two theard are communicate each togather
+  2) present in Object 
+  3) it will work in inside of the synchronised block area 
+  if a Thread calls wait () any object it immediatly relieases that lock of that perticular object and enter into waiting state 
+  we can observe 
+  1) immediatly
+  2) lock of that perticular object
+   except wait(),notify() and notifyAll methods won't reliease lock any where 
+   if a Thread a calls notify() on any object it releases the lock of that object may not immediatly 
+   except wait,notify and notifyAll () method  there is no others method where thread release the lock
+    
+	      method 																	is method released lock ?
+---------------------------------------------------------------------------------------------------------------------		  	yield()  															NO
+		join()																NO
+		sleep()																NO
+		wait()																YES
+		notify()															YES
+		notifyAll()															YES
+Q)	which of the following is valid ?
+A) 	1) if a thread calls wait() immediatly it will enter into waiting without releasing any lock --> invalid
+	2) If a thread calls wait() it releases lock of that object may not immediatly -->Invalid
+	3) If a Thread calls wait() on object it releases all locks acquired by that thread and immediatly enter into waiting() --->Invalid
+	4) If a thread calls wait() on any object it immediatly releases the lock of that perticular object and enter into waiting state --> Valid
+	5) If a thread calls notify () on any object it immediatly releases the lock of that perticular object -- >Invalid
+	6) If a thread calls notify() on object it releases the lock of that object may not immediatly --> Valid 
+1)	public final void wait() throws InrerruptedException// i want time untill we get for notification am waiting 
+2)	public final native void wait(long milliseconds) throws InrerruptedException// it can wait some milliseconds
+3)	public final  void wait(long ms, int ns) throws InrerruptedException//
+	 here 1 and 3 are not native methods but 2nd one is native method wait() is Overloaded method
+4) public final native void notify()
+5) public final native void notifyAll() this methods are not waing that's why here not throws the any Exception 	
+	here both means notify() and notifyAll both are native methods 
+	
+	Note :
+	every wait() method throws InterruptedException which is checked Exception hence whenevver we are using wait() method compulsery we should handled InterruptedException eiter by try catch or throes key words otherwise we will get compile time error 
+	 here we can exceplain the Life cycle og the Thread diagram --> Thread life cycle 
+	
+	1 ) if waiting thread got notification
+2) it time expires 
+3) if waiting thread got interrupted 
+	
+
+how to give two primary key's in one table hibernate
+-------------------------------------------- 
+ @Embeddable 
+hoow to crateComposite Primary key by @EmbeddedId annotablle  in Hibernate using JPA. 
+Compposite Primary Keys using @EmbeddedId annotation
+---------------------------------------------
+  1) Composite Primary keys in database are Group of the Columns , whose values toghter make a unique values
+  2) If unique key is contained in single column, then @Id is used and when the primary key contains of multiple  columns , these columns needs to be grouped  into a different object.
+  3) To group multiple columns into a class , some  rulles have to followed.
+ 
+ Rules to make a class hold composite keys.
+ ----------------------------------------
+   1) class must be a public class
+   2) class must be a default constructor
+   3) class will not require primmary key of it's own
+   4) class must impliment equals() and hashCode method 
+   5) class must be impliment  Serializable interface
+   
+   @Entity
+   public class Employee {
+   @EmbeddedId
+   private Address address;
+   // it's class it 
+   
+   }
+   
+   public class Address impliments Serializable {
+   private String name;   // these two properties makes as a primary key 
+   private String zipCode;
+   @Override
+   public int hashCode(){
+   final int prime = 31;
+         int result = 1;
+		 result = prime * result+((streetName== null) ? 0 : streetName.hashCode());
+		 result = proime*result+((zipCode == null )? 0 :zipCode.hachCode());
+		 return result;
+		 }
+		 @Override
+		 publli boolean equals(Object obj){
+		 if(this == obj)
+		   return true;
+		 if(obj == null)
+			return false;
+		 if(getClass() != obj.getClass())	
+			return false;
+		Address other = (Address) obj;
+if(streetName==null){
+if(other.streetName!=null)		
+		 
+		 }
+   
+   public class client{
+   public static void main(String args[]){
+   Employee employee1 = new WEmployee();
+   employee1.setEmployeeName("Sardar");
+   Address address1=new Address();
+   address1.setStreetName("Maidukurr");
+   address1.setZipcode("6334");
+   employee1.setAddress(address1);
+   
+   
+   
+   
+   
+   
+   What is Exception?
+Exception is an event that interrupts the normal flow of execution. It is a disruption during the execution of the Java program.
+
+There are two types of errors:
+
+Compile time errors
+Runtime errors
+Compile time errors can be again classified again into two types:
+
+Syntax Errors
+Semantic Errors
+Syntax Errors Example:
+
+Instead of declaring int a; you mistakenly declared it as in a; for which compiler will throw an error.
+
+Example: You have declared a variable int a; and after some lines of code you again declare an integer as int a;. All these errors are highlighted when you compile the code.
+
+SEMANTIC ERRORS IN JAVA
+--------------------------- 
+Many people find the difference between semantic errors and syntactical (syntax) errors in Java code hard to understand, but they are different. You can see a semantic error when the syntax of your code is correct but the code usage isn’t correct.
+
+The most common semantic error is one in which the code uses a variable that isn’t initialized properly. Fortunately, the compiler finds this particular semantic error in most cases. Here’s a list of other common semantic errors you need to know about.
+
+Using an operator that doesn’t apply: In some situations, you might try to use an operator that doesn’t apply to the variable or variables in question. For example, you can’t use the increment operator (++) with a boolean variable.
+
+Newer versions of Java have become adept at finding this error, but you can still encounter difficulty figuring out precisely why an error occurs when you use the wrong operator in some cases. For example, MyObj1 == MyObj2 won’t compare the two objects — the equality operator works only with primitive types.
+
+Using incompatible types: This type of semantic error can be tricky because the compiler will flag some errors and not others. For example, if you try to assign a float to an int variable, the compiler displays an error message.
+
+On the other hand, if you assign an int to a float variable, the compiler performs an automatic type conversion to the int to make it a float. The problem with this second scenario is that it can silently introduce errors in your code, especially if you really did mean to use a float.
+
+Losing precision during a conversion: Sometimes you can apply casting incorrectly. For example, casting a float to an int works fine, but at the loss of the decimal portion of the number.
+
+This loss of precision can affect the output of your application in unexpected ways and cause the output to reflect a value other than the one you expected. The compiler never finds this sort of error because you have specifically applied a cast to the variable and the compiler expects that you know what you’re doing.
+
+Performing an impossible cast: It’s possible to convert between many different types in Java. However, no matter how much you’d like to convert a boolean value into an int, Java won’t let you do it. The concept of performing the cast is syntactically correct, but you’re applying it incorrectly, making this a semantic error that the compiler always catches.
+
+Applying scoping incorrectly: Any variable you declare inside a method has the same scope — visibility to other parts of the application, in other words — as the method. Consequently, you can’t declare a private static int variable inside a method. Instead, you must define the variable globally like this:
+
+public class PrivateVar
+{
+   // This declaration works.
+   private static int PrivateInt = 3;
+   public static void main(String[] args)
+   {
+      // This declaration doesn’t work.
+      private static int PrivateInt = 3;
+   }
+}
+These are the most common problems you should look for in your code. Semantic errors tend to be harder to find than syntactical errors, but not nearly as hard as logical errors.
+
+
+
+@SpringBootApplication
+--------------------------
+@SpringBootConfiguration 
+@EnableAutoConfiguration
+@ComponentSca
+@Targer(value={TYPE})
+@Retention(value=RUNTIME)
+@Documented
+@Inherited
+ in the above annotations main important here only 
+@EnableAutoConfiguration
+@ComponentScan
+--------------------------
+@SpringBootApplication
+public class HelloExampleApplication
+public static void main(String args[]){
+SpringApplication.run(HelloExampleApplication.class,args);
+this statement automatically created the spring container
+or Application context = SpringApplication.run(HelloExampleApplication.class,args);
+ HelloService helloService = context.getBean("helloservice",HelloService.class);
+ System.out.println(helloService.sayHello("Raja");
+
+
+
+
+}
+
+
+@serviice("helloServiice")--->this is like bean name 
+public class Helloservice {
+public String sayHello(String name){
+return "Hello" + name + "Welcame to spring boot application";  // i want to execute the these service in our application 
+
+}
+
+   
+   
+   HashMap intenally what's happening ------?
+   
+   Map<String,Integer> map = new HashMap<>();
+   // to insert the values in the map
+   map.put("abc",1);
+   intenally process 
+   ------------------
+   put(Key k,Value v)
+   the put method it will calculate the hash of the key
+   hash(key);
+   why the calculate the hash 
+   ---------------------------
+   hashCode code = hash(key);
+   hashCode is it can be retrived the record very fast that's why here and it can be store the hashcode in buckets  
+   hachCode = hash(abc);//it example hashCode is 111111112
+      int n = hash&(n-1)
+	  
+
+   map.put("abc",1);
+   map.put("aaa",2);
+   hachCode = hash(aaa);//it example hashCode is 2221112
+    7 int index = hash&(n-1)
+	here index number is 7 and it will be store the 
+  map.put("aab",3);	
+	map.put(null,4);//the key is null this one it can be store the Zero(0) bucket 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   with spring boot with angular application 
+   ------------------------------------------
+   htttps://github.com/in28minuts/full-stack-with-angular-and-spting-boot
+   
+ go to angular with spring boot applcation  
+   
+     TypeScript 
+	 ---------
+	 TYPESCRIPT = JAVASCRIPT + STRONG TYPING
+	 Basic Authentication and AWT with spring Security(JWT-->JSON WEB TOKEN )
+	  why full stack ?
+	  ---------------
+	  in java script annotation we can call to Decorator 
+	  in angular also we can call the annotations are Decorator 
+	  EX: @Component({.....})// this is called as a Decorator
+	  import {Component } from '@angular/core';
+	       classes/interfaces      modules are package
+	  
+	  
+	  JAVASCRIPT
+	  -----------
+	  var value ;
+	  value = 5;
+	  value = false;
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  In Java 
+	  --------------
+	  int value;
+	  value = 5;
+	  value = "five";//compile time error it can be occurs
+	  
+	  TYPESCRIPT
+	  -----------                                       here this one is return type 
+	  function add (number1: numner, number2:number,,):number {
+	  return number1+number2;
+	  interface DoSomething{
+	  
+	  }
+	first install the angular
+-----------------------------------
+next ng version 
+ng help
+     --->show the help of the angular 
+	 we will run ng build , ng init,ng test,ng e2e,ng serve in the next step !
+how to create the project in angular
+-----------------------------------
+ng new <application-name>
+execute the applcation/run the applcation
+-----------------------------------------
+ng serve
+D:\simha\angular_spring_boot_comminication\spring-boot-rest-user-registration-form>ng serve
+ next step---->
+      -----
+	  ng init -->coding standing validations 
+	  --------------------------------------
+	  
+	  
+	  
+	  
+	  D:\simha\angular_spring_boot_comminication\spring-boot-rest-user-registration-form>npm init
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help json` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install <pkg>` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+package name: (spring-boot-rest-user-registration-form) ng lint
+Sorry, name can only contain URL-friendly characters.
+package name: (spring-boot-rest-user-registration-form) y
+version: (0.0.0)
+entry point: (index.js)
+git repository:
+keywords:
+author: lion
+license: (ISC)
+About to write to D:\simha\angular_spring_boot_comminication\spring-boot-rest-user-registration-form\package.json:
+
+{
+  "name": "y",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "~7.2.0",
+    "@angular/common": "~7.2.0",
+    "@angular/compiler": "~7.2.0",
+    "@angular/core": "~7.2.0",
+    "@angular/forms": "~7.2.0",
+    "@angular/platform-browser": "~7.2.0",
+    "@angular/platform-browser-dynamic": "~7.2.0",
+    "@angular/router": "~7.2.0",
+    "core-js": "^2.5.4",
+    "rxjs": "~6.3.3",
+    "tslib": "^1.9.0",
+    "zone.js": "~0.8.26"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~0.13.0",
+    "@angular/cli": "~7.3.8",
+    "@angular/compiler-cli": "~7.2.0",
+    "@angular/language-service": "~7.2.0",
+    "@types/node": "~8.9.4",
+    "@types/jasmine": "~2.8.8",
+    "@types/jasminewd2": "~2.0.3",
+    "codelyzer": "~4.5.0",
+    "jasmine-core": "~2.99.1",
+    "jasmine-spec-reporter": "~4.2.1",
+    "karma": "~4.0.0",
+    "karma-chrome-launcher": "~2.2.0",
+    "karma-coverage-istanbul-reporter": "~2.0.1",
+    "karma-jasmine": "~1.1.2",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "protractor": "~5.4.0",
+    "ts-node": "~7.0.0",
+    "tslint": "~5.11.0",
+    "typescript": "~3.2.2"
+  },
+  "description": "This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.",
+  "main": "index.js",
+  "author": "lion",
+  "license": "ISC"
+}
+
+
+Is this OK? (yes) -y
+Aborted.
+  
+ 
+when ever
+ng build 
+----------
+it can be created the specific files are created the ng build commands 
+
+
+by using ng build to deployee the project another environment of the application it's very easy  or production of the application
+
+
+jasmine --->by using this one unit test very easy to this application of the application of the applcation
+e2e-->end to end test tgotally application of the angular application 
+
+D:\simha\angular_spring_boot_comminication\spring-boot-rest-user-registration-form>ng e2e
+** Angular Live Development Server is listening on localhost:4200, open your browser on http://localhost:4200/ **
+
+Date: 2019-04-09T11:23:49.086Z
+Hash: 9f6bb00eac58e9912dcf
+Time: 14484ms
+chunk {es2015-polyfills} es2015-polyfills.js, es2015-polyfills.js.map (es2015-polyfills) 284 kB [initial] [rendered]
+chunk {main} main.js, main.js.map (main) 11.7 kB [initial] [rendered]
+chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 236 kB [initial] [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 6.08 kB [entry] [rendered]
+chunk {styles} styles.js, styles.js.map (styles) 16.3 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 3.77 MB [initial] [rendered]
+[16:53:49] I/file_manager - creating folder D:\simha\angular_spring_boot_comminication\spring-boot-rest-user-registration-form\node_modules\protractor\node_modules\webdriver-manager\selenium
+[16:53:49] I/config_source - curl -oD:\simha\angular_spring_boot_comminication\spring-boot-rest-user-registration-form\node_modules\protractor\node_modules\webdriver-manager\selenium\chrome-response.xml https://chromedriver.storage.googleapis.com/
+i ｢wdm｣: Compiled successfully.
+[16:53:50] I/downloader - curl -oD:\simha\angular_spring_boot_comminication\spring-boot-rest-user-registration-form\node_modules\protractor\node_modules\webdriver-manager\selenium/chromedriver_2.46.zip https://chromedriver.storage.googleapis.com/2.46/chromedriv
+er_win32.zip
+[16:53:52] I/update - chromedriver: unzipping chromedriver_2.46.zip
+[16:53:53] I/launcher - Running 1 instances of WebDriver
+[16:53:53] I/direct - Using ChromeDriver directly...
+
+DevTools listening on ws://127.0.0.1:50436/devtools/browser/3412bbf0-5da3-47ca-abda-650a54116724
+Jasmine started
+
+  workspace-project App
+    √ should display welcome message
+
+Executed 1 of 1 spec SUCCESS in 2 secs.
+[16:54:04] I/launcher - 0 instance(s) of WebDriver still running
+[16:54:04] I/launcher - chrome #01 passed
+
+we can put the any data of the application related URL /URI in keep the  environment.ts file any type of the 
+
+
+
+
+
+tsconfig.json file is it can be converted to the typescript to javascript file because the browser should not understand the typescript that's why it can be converted to the typescript to javascript the file name is tsconfig.json file 
+
+package.json just like pom.xml file 
+-----------------------------------
+index.html and test.ts file when we can lanch the application that time we can be boostrap the application 
+
+Angular Component 
+-----------------
+Diagram---->
+--------------
+ Component
+ --------------
+ import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',// here selector is a tag name for this component here what tag name am used in the selector of the application  <this app-root> having to index.html page also 
+  //in index.html page having the tag is <app-root></app-root> 
+  templateUrl: './app.component.html',// this is template url this one is where the location of the html page and also name as the html page  
+  styleUrls: ['./app.component.css']// here styling as the specific component of the application 
+})
+export class AppComponent {
+  title = 'spring-boot-rest-user-registration-form';// this value is means the title values it can be mapped bby app.component.html page that means app.component.html page show to print these values {{title}} we can print the values of the title not only title we can give any values of the application that values are printed here only
+that's called as a interpolation-{{data}}  
+
+
+@Component({
+  selector: 'app-root',
+  /** templateUrl: './app.component.html',*/
+     templateUrl: `<h1>{{title}}</h1>`,
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'spring-boot-rest-user-registration-form';
+  welcome = 'Welcome to Angular Application ';
+
+}
+we will get the error of the application 
+catch the typo =><h1>{{title}}</h1>
+ERROR in ./src/app/app.component.ts
+Module not found: Error: Can't resolve './<h1>{{title}}</h1>' in 'D:\simha\angular_spring_boot_comminication\spring-boot-re
+st-user-registration-form\src\app'
+i ｢wdm｣: Failed to compile.
+that's why we can directly define the template but not templateUrl
+how to create the modules of the angular  application project 
+>ng generate component <Component-name>
+or
+>ng -g -c <Component-name>
+EX :
+ng generate component welcome //here welcome component is created the application of the module 
+Every Angular Component (@component) has to be associated with an Angular Module (@NgModule) 
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+in the module.ts file is a one of the heart the our application and main controller of the appplication whatever we can generate new module that modules are automatically put the miodule.ts file of the our application 
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+ whatever we can generate the new module it can be automatically put the inside of the @NgModule of the declaration array.
+ The structure of an NgModule is the same whether it is a root module or a feature module
+  In the CLI generated feature module, there are two JavaScript import statements at the top of the file: the first imports NgModule, which, like the root module, lets you use the @NgModule decorator; the second imports CommonModule, which contributes many common directives such as ngIf and ngFor
+
+
+
+
+Udemy class notes
+-----------------------
+
+we can create the one new component here that component name is a welcome
+-----------------------------------------
+D:\simha\angular_spring_boot_comminication\spring-boot-rest-user-registration-form>ng generate component welcome
+CREATE src/app/welcome/welcome.component.html (26 bytes)
+CREATE src/app/welcome/welcome.component.spec.ts (635 bytes)
+CREATE src/app/welcome/welcome.component.ts (273 bytes)
+CREATE src/app/welcome/welcome.component.css (0 bytes)
+UPDATE src/app/app.module.ts (479 bytes)
+
+the above genereted files are it can be created the 
+welcome.component.html
+welcome.component.css
+welcome.component.ts
+welcome.component.spec.ts
+and also one update file is there in module.ts file
+UPDATE src/app/app.module.ts (479 bytes) this .ts file is updated here it self only aumatically 
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { WelcomeComponent } from './welcome/welcome.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    WelcomeComponent-->this is updated file automatically it's come to NgModule this is feature file that's why this is a feature file 
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+ Angular Notes
+ ---------------  https://github.com/angular/angular-cli/wiki
+Angular is a JavaScript Framework which allows you to create reactive Single-Page-applications(SPS's)
+without load the page it can be change the page automatically that's power of the angular framework 
+
+ make sure "ng serve " is still running otherwise the page won't update ! 
+ app.component.html page
+ 
+ notes udemy
+ -----------
+ CLI Deep Dive & Troubleshooting
+In the next lecture, we're going to build our first little app!
+
+If the CLI prompts you to answer some questions (some versions do that), you can simply hit ENTER for all questions. This will accept the default settings which are fine for this course.
+
+The CLI generates a different welcome screen than you're going to see in my video though. No worries, you'll still be able to follow along without issues! Just make sure to code along so that your code equals mine - Angular itself didn't change a bit :)
+
+Depending on the CLI version you're using, you might also need to add the FormsModule  to the imports[]  array in your app.module.ts  file (add it if you don't see it there). You might not fully understand what that all means but we're going to cover that in this course, no worries.
+
+If you don't have FormsModule  in imports[]  in AppModule , please do add it and also add an import at the top of that file: import { FormsModule } from '@angular/forms'; 
+
+-----
+
+If you want to dive deeper into the CLI and learn more about its usage, have a look at its official documentation: https://github.com/angular/angular-cli/wiki
+
+You encountered issues during the installation of the CLI or setup of a new Angular project?
+
+A lot of problems are solved by making sure you're using the latest version of NodeJS, npm and the CLI itself.
+
+Updating NodeJS:
+
+Go to nodejs.org and download the latest version - uninstall (all) installed versions on your machine first.
+
+Updating npm:
+
+Run [sudo] npm install -g npm  (sudo  is only required on Mac/ Linux)
+
+Updating the CLI
+
+[sudo] npm uninstall -g angular-cli @angular/cli 
+
+npm cache clean 
+
+[sudo] npm install -g @angular/cli 
+
+Here are some common issues & solutions:
+
+Creation of a new project takes forever (longer than 3 minutes)
+That happens on Windows from time to time => Try running the command line as administrator
+
+You get an EADDR error (Address already in use)
+You might already have another ng serve process running - make sure to quit that or use ng serve --port ANOTHERPORT  to serve your project on a new port
+
+My changes are not reflected in the browser (App is not compiling)
+Check if the window running ng serve  displays an error. If that's not the case, make sure you're using the latest CLI version and try restarting your CLI
+
+>npm install -g @angular/cli@latest <here latest-->it can be install the latest version of the anular and -g is a Global here we can install the angular in Globally of the application  
+ this one it can be install the Linux in 
+ ----------------------------------------
+ $ sudo npm install -g @angular/cli@latest
+ 
+ we can screate the new project 
+ --------------------------------
+ >ng new my-first-app 
+ after asing 
+ would you kike to add Angular routing ? No
+  package.json file
+  -----------------
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "~7.2.0",
+    "@angular/common": "~7.2.0",
+    "@angular/compiler": "~7.2.0",
+    "@angular/core": "~7.2.0",
+    "@angular/forms": "~7.2.0",
+    "@angular/platform-browser": "~7.2.0",
+    "@angular/platform-browser-dynamic": "~7.2.0",
+    "@angular/router": "~7.2.0",
+    "core-js": "^2.5.4",
+    "rxjs": "~6.3.3",
+    "tslib": "^1.9.0",
+    "zone.js": "~0.8.26"
+  },
+  above the files are dependancy of the project related files (this name are in java packages it can be cllaed )
+ whatever we install the dependancies automatically here it can put the that related file oof the application 
+  the Default coonfig does the job , you don't need to edit any of these files.
+  projecyion
+ 
+ app.component.ts 
+ export class AppComponent {
+ name='My App ';
+ }
+ app.component.html 
+ <input type="text" [(ngModel)]="name">
+ <p>{{name}}</p>
+ 
+ some ngModel does not understand the angular 
+ ERROR:
+ how to solve the "Uncaught Error: Template parse errors can't to bind to "ngModel" since it's't a known property of 'input'
+ 1)this is app.component.html 
+ 2)this is app.component.ts 
+ 3)So i want to get input Value(bind) from app.component.html to   'name' variable in app.component.ts file 
+ 
+ 
+ but when try to do this there is an error
+ 4)how to solve this simply add " import {FormsModule } from '@angular/forms'; 
+                         FormsModule  // FormsModule is it can add the impports:array of the app.module.ts file 
+ into app.module.ts file 
+ 5)it's solved the above problem of the application error of the above whatever am showing that error it can be solved the problem of the application 
+ when only we can write the ngModel the ngModel it can be bind attribute of the html to .ts file .the  page that we can get the error because of some browsers not supported that's why we can import thee another class 
+    
+ whenever we can put the import the FormsModule class of the module.ts file that error automatically rectify the above error that's why we can put the FormsModule in app.module.ts file  
+  Q) what is FormsModule in angular ?
+  1)this is not a angular feature this is a typescript feature    
+ 
+ Course Structure 
+ --------------
+ Getting started --- > the Basics ----> Components & Databinding-->directors-->Servies&Dependancy Injection-->Routing--->Observables--->Forms-->Pipes-->Http-->Authentication-->Optimization --->Deployment-->animation & Testing   ---go to see the angular course of the diagram 
+ ---------------------------------------------------------------
+ How to get the most out of the course in angular of the application
+ =======================================================================
+ TypeScript 
+ ---------
+ TypeScript is super set of the JavaScript (more features than Vanilla JS (EX:Types ,Classes,Interfaces..)
+  TypeScript is not run to browser it can be converted to the JavaScript (TypeScript after compiled it can be converted to JavaScript  that JavaScript it can be run to the browser ))
+ goto diagram--type to javascript
+ how to install the bootstrap in npm 
+ >npm install --save bootstrap@3
+ how to put the some packages in the open the angular.json file in that file we can put the out own style related data that time we can put the that data in the 
+ EX :1
+ "styles":[
+  
+  "sr/style.css"// this one is Globally related css file automaticaaly call .in this styles we can put the bootstrap related things we can put manually here it's self 
+ ],
+ 
+ EX 2:
+ "styles":[    this one we can go to the our node related packages and search the that packages and select the our perticular related 
+	"node_modules///bootstrap/dist/css/bootstrap.min.css,
+    "sr/style.css"
+	]
+ This is Udemy Notes
+ ---------------------
+ Where to find the Course Source Code
+Do you get some strange error? Are you stuck? 
+
+Have a look at the source code of this course - by comparing it to your code you should be able to quickly find out where your code deviates and what causes the issue!
+
+You can find the source code of each section attached to the last lecture of that section!
+
+Module Introduction
+--------------------
+
+ "styles":[
+  
+  "sr/style.css"
+ 
+ <h3> am in the AppComponent </h3>// here bootstrap the application 
+ Angular is Framework it is used to single page applcations main this is a single page 
+ <app-root>Loading...</app-root>//
+ how to create the our own component of the in these application  go diagram--1 
+ main.ts file diagram-->2
+ -----------
+ import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
+
+  this file is having the bootstrap related data or infomation of the application
+  Kepp in mind : Angular in the end is a JS framework , changing your DOM('HTML') at runtime 
+  Component !
+  ------------ 
+  
+  
+ 13nt class 
+-----------------
+index.html 
+--------
+ <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SpringBootRestUserRegistrationForm</title>
+  <base href="/">
+
+ <!-- <meta name="viewport" content="width=device-width, initial-scale=1">-->
+  <!--<link rel="icon" type="image/x-icon" href="favicon.ico">-->
+</head>
+<body>
+  <app-root>Loading...</app-root>
+  <div>Index HTML Component</div>
+</body>
+</html>
+@Component({
+selecttor : 'app-root', ----->
+templateUrl : './app.component.html',
+styleUrls : ['./app.component.css"] 
+    })
+export class AppComponent {
+
+}	
+ 
+main.ts
+---------
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+platformBrowserDynamic().bootstrapModule(AppModule) /** this is boostrap of the our application */
+  .catch(err => console.error(err));
+
+
+  daigram --> how to link the module.ts and app.module.ts file in main.ts file
+  @NgModule({})
+  diagram--> flow of work the angular module main applicatiomn.PNG
+
+
+course 14
+-----------
+Diagram---- > source cod of the angular 
+ Note : Keep in mid : Angular in the end is a JS Framework changing your DOM('HTML') at runtime
+  
+  open the source code of the browser:
+  <html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SpringBootRestUserRegistrationForm</title>
+  <base href="/">
+
+ <!-- <meta name="viewport" content="width=device-width, initial-scale=1">-->
+  <!--<link rel="icon" type="image/x-icon" href="favicon.ico">-->
+</head>
+<body>
+  <app-root>Loading...</app-root> <!-- here angular related of the  attribute-->
+  <div>Index HTML Component</div>
+<script type="text/javascript" src="runtime.js"></script><script type="text/javascript" src="es2015-polyfills.js" nomodule></script><script type="text/javascript" src="polyfills.js"></script><script type="text/javascript" src="styles.js"></script><script type="text/javascript" src="vendor.js"></script><script type="text/javascript" src="main.js"></script></body>
+</html>
+
+
+
+             Component
+			 ---------
+	class 15
+-------------------
+  it can be create the server component of sub component of the app component
+	 
+  right click on the app component and select new folder that folder name is server  
+   right click on the server component and create new file of the that file name is server.component.ts file
+        structure 
+		----------
+		  app
+		  ---
+		  |
+		  |--->server
+		  |		|	
+		  |		|---->server.component.ts
+		  |-->app.component.css
+		  |-->app.component.html
+		  |-->app.component.spec.ts
+		  |-->app.module.ts file
+		  |
+
+server.component.ts
+-------------------
+ import {component } from '@angular/core';
+ @Component({
+  /** any configuration we can keep here only */
+  selector : 'app-server',
+  templateUrl : 'server.component.html'
+ })
+ export class SerrverComponent {
+ 
+ }
+server.component.html
+----------------------
+<p> The Server Component </p>
+
+class 16
+---------
+  here we need to changed the app module 
+  ------------------------------------------
+  app.module.ts file
+  --------------------
+   Note : I am saying 'app' here because we only have one module, hence representing our complete app!
+   diagram--> relation of the application 
+   
+
+boostrap :[AppComponent]->here telling which component is recogniziing in index.html page
+app.module.ts
+-------------
+
+import {ServerComponent} from './server/server.component';
+@NgModule({
+declarations :[
+AppComponent,
+ServerComponent //when we can keep this component wy the import the that file because of this is not angular this is typescript file that's must and should be we can import the this file here only not only this one any one we can keep the inside of the any applicaation we must should tell the this is typescript file  tha's the main reason we can import 
+],
+imports : [
+BrowserModule,
+FormModule,
+H,ttpModule
+],
+providers:[] ,
+boostrap : [AppComponent] 
+})
+
+export class AppModule { }
+
+
+
+class 17
+----------
+
+Note :
+	The plugin name is 'emmet' .  Google for 'YOUR_EDITOR' + emmet to lear how to integrate it in your editor .  
+	app.component.html
+	-----------------------
+	<h3> I am the AppComponent <h3>
+<app-server></app-server>	
+	
+	going to see the out put we can observe
+	Diagram---->server-component result
+	class 18
+	-------
+	>ng g c servers
+	
+	servers.component.ts
+		-----------------------
+	<app-server></app-server>
+	<app-server></app-server>
+	<app-server></app-server>
+	diagram-->wheneverr we can >g c servers component automatically                             imported the app.module.ts file
+   no need to explicitly imported the ts files manually
+	severs.servers.component.ts file
+	---------------------------------
+	impport {Component ,OnInit } from '@angular/core';
+	@Component({
+	selector : 'app-servers',
+	templateUrl : 'servers.component.html',
+	styleUrls : ['.servers.component.css']
+	})
+	export class ServersComponent implements OnInit {
+	constructor(){}
+	ngOnInit(){
+		}
+	}//you may ignore ' constructor and ngOnInit() for now 
+	diagram-->here inspector of the angular
+	
+	class 19
+	---------
+	severs.servers.component.ts file
+	---------------------------------
+	impport {Component ,OnInit } from '@angular/core';
+	@Component({
+	selector : 'app-servers',
+	//templateUrl : 'servers.component.html',
+	template : '<app-server></app-server><app-server></app-server>',//here we can write sngle line it's fine that time we can metion only single quote mark only ('') but we can write the multiple linew that time we can write the html related data in tilda tag(~~)
+	styleUrls : ['.servers.component.css']
+	})
+	export class ServersComponent implements OnInit {
+	severs.servers.component.ts file
+	---------------------------------
+	impport {Component ,OnInit } from '@angular/core';
+	@Component({
+	selector : 'app-servers',
+	//templateUrl : 'servers.component.html',
+	template : `<app-server></app-server>
+	--
+	-- here we can keep only html related data only
+	<app-server></app-server>`,//here we can write sngle line it's fine that time we can metion only single quote mark only ('') but we can write the multiple linew that time we can write the html related data in tilda tag(~~)
+	styleUrls : ['.servers.component.css']
+	})
+	export class ServersComponent implements OnInit {
+	
+	
+	class 20
+	--------
+	class 21
+	-------------
+	here main theam is of focus of the application is style in appp.component.ts file
+	app.component.ts
+	---------------
+	import {Component } from '@angular-core';
+@C0mponent({
+selector : 'app-root',
+templates:'app.component.html',
+styleUrls:'app.component.css' // here we can the explict;y in app.component.css file am not interested call the app.component.css file but am writing only with in app.component.ts file in that file style related opreation are also we cam write same page of the css related style the same page that time we can't give the styleUrls , styleUrls replaced with style
+})
+
+after modification  app.component.ts we can observe here 
+------------------	---------------
+	import {Component } from '@angular-core';
+@C0mponent({
+selector : '[app-root'],
+templates:'app.component.html',
+style : [`
+h3{
+color : dodgerble;
+  }
+ `]
+})
+export class AppComponent{}
+
+we can write the app.component.html code 
+app.component.html
+-----------------------------------
+   <div class ="container">
+	<div class="row">
+		<div class = "col-xs-12">
+			<h3> I am the AppComponent of the angular applcation</h3>
+			<app-servers></app-serrvers>
+		</div>
+	</div>
+   </div>
+
+we can ru the applicaation 
+that time we cann get the one error
+diagram-->we can get the error of the on browser here we can see the inspector saying as same 
+app-servers is not a know element this error we can get here only 
+how to solve the above the proble / how to rectify the above the problem 
+
+app.component.html
+-----------------------------------
+   <div class ="container">
+	<div class="row">
+		<div class = "col-xs-12">
+			<h3> I am the AppComponent of the angular applcation</h3>
+			<!--<app-servers></app-serrvers> -->
+			<div app-servers></div> enough here we can get the result but not error 
+			<!-- diagram--> app-servers in componet.ts file -->
+		</div>
+	</div>
+   </div>
+
+   server.component.ts
+   ----------------------------
+	import {Component } from '@angular-core';
+@C0mponent({
+selector : 'app-servers',
+templates:`<app-server></app-server>
+			<app-server></app-server>`,
+styleUrls:['./server.component.css']
+})
+export class AppComponent{}
+   
+ 
+app.component.html
+-----------------------------------
+   <div class ="container">
+	<div class="row">
+		<div class = "col-xs-12">
+			<h3> I am the AppComponent of the angular applcation</h3>
+			<!--<app-servers></app-serrvers> -->
+			<!--<div app-servers></div>--> enough here we can get the result but not error 
+			<!-- diagram--> app-servers in componet.ts file -->
+			<div class = "app-servers"></div>
+			<!-- here we can selecting these many ways to print the data of the page 
+			above is the selectors  in applicaation-->
+		</div>
+	</div>
+   </div>
+
+   class -23
+   -------------- 
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+		  
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+
+	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+how to create the login and registration form page in Angular application 
+-----------------------------------------------------------------------------  
+  Login Component 
+  Admin Compponent
+  
+  what is what is routing in Angular 
+  -----------------------------------
+  here Example routing 
+  how to Navigate the difference views 
+  routing and routiing alone here maximum using hard code
+  Diagram---- routing
+  Routing in Angular
+  --------------------
+  localhost:4200
+  Routing and Navigarion
+  
+  Departments           								 Employees
+  ------------        								 -----------------
+  localhost:4200/departments						http://localhost:4200/employees
+  DepartmentList										EmployeeList
+  
+  here when we can click the Deportment button it can shows DepartmentList and when we can click the employees related button it can shows EmployeeList only 
+  
+  Routing App  
+  ---------------
+  Step 1: Generate a project with routing option
+  Step 2: Generate departmentList and employeeList components
+  Step 3: Configure the routes
+  Step 4: And buttions and use directives to navigate 
+  Step 1:
+  >ng new routing-demo --routing 
+  when we can create the new applicaation or project of the angular it will generate the 
+  normal without using routing component 4 components are generated
+  > ng new routing-demo  it will generate below files
+  1) app.component.css
+  2) app.component.html
+  3) app.component.spec.ts
+  4) app.module.ts file 
+  but when we can create the project or application by using --routing that time it can be generate the one additional file that file name is 'app.routing.module.ts' file
+  
+  when will use the routing this time see below
+  > ng new routing-demo --routing
+  1) app.component.css
+  2) app.component.html
+  3) app.component.spec.ts
+  4) app.module.ts file 
+  5) app.routing.module.ts (this is additional to generate the file 
+  
+  afteer goto see the index.html page of the application 
+  this page <base href="/"> -->this is the tag main
+index.html 
+----------
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>RoutingDemo</title>
+  <base href="/"><!-- this main of the attribute -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+  
+  Step 2:
+  >ng g c department-list -it  -is   (it-->inline template -is -->inline style 
+  
+  D:\simha\routing-demo>ng g c department-list -it  -is
+CREATE src/app/department-list/department-list.component.spec.ts (685 bytes)
+CREATE src/app/department-list/department-list.component.ts (282 bytes)
+UPDATE src/app/app.module.ts (509 bytes)
+
+  >ng g c employee-list -it  -is   (it-->inline template -is -->inline style
+  
+  D:\simha\routing-demo>ng g c employee-list -it
+CREATE src/app/employee-list/employee-list.component.spec.ts (671 bytes)
+CREATE src/app/employee-list/employee-list.component.ts (310 bytes)
+CREATE src/app/employee-list/employee-list.component.css (0 bytes)
+UPDATE src/app/app.module.ts (617 bytes)
+
+  Step 3
+  --------
+  go to see the app.routing.module.ts
+   that module.ts file we can see the const routes : Routes = []; //all possible routes each and every think in object 
+   in the first path : 'departments'
+   in the second pat : 'employees'
+   see the Syntax:
+      app-routing.module.ts file in this file we can add  
+   ---------------------------
+   EX 1:
+   const routes : Routes = []; this default to startiing the structure  here we can add the object in the form of the objects on array
+ 
+ in by default file is app.routing-module.ts
+
+ app.routing-module.ts
+ -----------------------
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+const routes: Routes = [];
+/**
+each rout contaings object
+*/
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+modify the above file 
+---------------------
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+const routes: Routes = [
+{path : 'deportments', component : DepartmentListComponent},
+{path : 'employees' , component : EmployeeListComponent}
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+modify the file routing.mobile.ts file
+----------------------------------------
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import {DepartmentListComponent } from './department-list/department-list.component';
+import {EmployeeListComponent } from './employee-list/employee-list.component';
+const routes: Routes = [
+{path : 'departments', component : DepartmentListComponent },
+{path : 'employees' , component : EmployeeListComponent}
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+export const routingComponents : [DepartmentListComponent,EmployeeListComponent];
+/**
+this is array of the both  EmployeeListComponent,DepartmentListComponent that's why we can keeping data
+both components of the totally data of the component
+
+*/
+
+
+in app.module.ts files
+---------------------------
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { AppRoutingModule,routingComponents } from './app-routing.module';/** thiis is add the file of the app.routing.module.ts file in this is file it can be fetch  the data of the both related of the routingComponet : this variable it can be fetch both files employee and deportment related data it will come automatically with array  that's why we can delete the below relateed two ts files that place it can keep the replace the  only const */
+import { AppComponent } from './app.component';
+//import { DepartmentListComponent } from './department-list/department-list.component';
+//import { EmployeeListComponent } from './employee-list/employee-list.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    routingComponents
+    //DepartmentListComponent,
+    //EmployeeListComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+ 
+   here we can extends
+   EX 2:
+   const routes : Routes = [
+   {path : 'departments' ,component : DepartmentListComponent},
+   {path : 'employees' , component : EmployeeListComponent }
+   ];
+   app.routing.module.ts and app.module.ts files are having duplecate components
+   app.module.ts
+   --------------
+   import {DepartmentListComponent } from './department-list/department-list.component';
+   import {EmployeeListComponent } from './employee-list/employee-list.component';
+   @NgModule({
+   declarations : [
+   AppComponent,
+   DepartmentListComponent,
+   EmployeeListComponent,
+   ],
+   //here you don't touch here 
+   app.routing.mobile.ts file 
+   ---------------------------- in this file we can export and import the related 
+   here create the array all routing components 
+   const routes : Routes = [
+   {path : 'departments' ,component : DepartmentListComponent},
+   {path : 'employees' , component : EmployeeListComponent }
+   ]; 
+   @NgModule({
+   imports : [RouterModule,forRoot(routes)],
+   exports : [RouterModule]
+   )}
+   that's why herre we can creating new const in this file  exporting and importing the files 
+   export class AppRoutingModule{}
+   export const routingComponents = [DepartmentListComponent,EmployeeListComponent] 
+   this class it can import the app.module.ts file
+   
+   app.module.ts 
+   ------------
+   import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { DepartmentListComponent } from './department-list/department-list.component';
+import { EmployeeListComponent } from './employee-list/employee-list.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    DepartmentListComponent,
+    EmployeeListComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+   in the app.module.ts file we can remove the DepartmentListComponent,EmployeeListComponent components of the app.module.ts file in these two places we can put in  'routingComponents' only 
+   
+   
+   app.module.ts 
+   ------------
+   import {AppRoutingModule,routingComponents} from './app.routing.module.ts'; here we can import the file
+   @NgModule({
+   declarations : [
+   AppComponent,
+  routingComponents
+   ],
+   here we can put in only routingComponents if enough of the app.module.ts file it can work 
+   
+   where we can specify it 
+   
+   these are specify in the app.component.html file in 'routerlink'
+   when we can click the 'department' goto the DepartmentListCompoent 
+   when we can click the 'employess' goto the EmployeeListCompoent 
+    in html page goes to the related components of the data 
+	
+	app.component.html
+	---------------
+	<router-outlet></router-outlet> this is having router package 
+   <!-- router view go here only -->
+   
+   app.component.html
+	---------------
+	<div style = "test-align:center"> <!-- by default comes this one
+		<h1> Routing and Navigation </h1>
+  </div> 
+  <router-outlet></router-outlet>
+  <!-- Routed view go here -->
+  
+  we can run the applicaation
+  ----------------------------
+http://http://localhost:4200/
+  Output :               Routing and Navigation
+
+http://localhost:4200/employees
+
+ OutPut : Routing and Navigation
+employee-list works!  
+  
+
+http://localhost:4200/deportments
+
+ OutPut : Routing and Navigation
+deportment-list works!  
+  
+Q)  what is nav attribute ?
+A)  The <nav> tag defines a set of navigation links. 
+ The <nav> element is intended only for major block of navigation links.
+ Browsers, such as screen readers for disabled users, can use this element to determine whether to omit the initial rendering of this content.
+
+The <nav> tag defines a set of navigation links.
+
+Notice that NOT all links of a document should be inside a <nav> element. The <nav> element is intended only for major block of navigation links.
+
+Browsers, such as screen readers for disabled users, can use this element to determine whether to omit the initial rendering of this content. 
+  
+  <!DOCTYPE html>
+<html>
+<body>
+ 
+<nav>
+<a href="/html/">HTML</a> |
+<a href="/css/">CSS</a> |
+<a href="/js/">JavaScript</a> |
+<a href="/jquery/">jQuery</a>
+</nav>
+ 
+<p><strong>Note:</strong> The nav tag is not supported in Internet Explorer 8 and earlier versions.</p>
+ 
+</body>
+</html>
+  
+ The <nav> element will allow us to group together a list of navigation links in a semantic manner.
+
+We can encapsulate a group of links in a single semantic element and it looks organized.
+
+<section> 
+     <nav> 
+          <a href="html5.htm">HTML5</a> | 
+          <a href="css.htm">CSS</a> | 
+          <a href="sql.htm">SQL</a> 
+      </nav> 
+</section> 
+  
+  
+  app.component.html
+  -----------------
+  <!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+<h1>Routing and Navigation</h1>
+</div>
+<nav> <!-- this is working in ancor tag means <a href="">list</a> this one also working like -->
+  <a routerLink="/departments" routerLinkActive="active">Department</a><br>
+  <a routerLink="employees" routerLinkActive="active">Employee</a>
+</nav>
+
+<router-outlet></router-outlet>
+
+style.css file 
+---------------
+/* You can add global styles to this file, and also import other style files */
+
+nav a.active{
+color : green;
+}
+here nav is attribute and a is ancor tag both it can be write in combination of the css file
+routerLinkActive this one work as same as some class of the html page
+nav a.active
+  
+  that's why index.html file ('/') it can be give dynamic url 
+  --------------------------------------------------------
+   <base href="/"> <!-- how to construct url the navigating -->
+
+   import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import {DepartmentListComponent } from './department-list/department-list.component';
+import {EmployeeListComponent } from './employee-list/employee-list.component';
+const routes: Routes = [
+      ------- >   
+{path : 'departments', component : DepartmentListComponent },
+{path : 'employees' , component : EmployeeListComponent}
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+								------> both are same 
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+export const routingComponents = [DepartmentListComponent,EmployeeListComponent];
+
+http://localhost:4200
+											Routing and Navigation
+Department   				Employee
+here two above the two things are there we can click one 
+EX :
+we can click Department that time we gill go to index.html page 
+index.html
+----------
+<base href="/"> whatever we can click that one is it will come here only  
+afterr here to it will goes to the app.routing.module.ts file
+app.routing.module.ts
+--------------------
+this file having const
+
+const routes: Routes = [
+      ------- >   
+{path : 'departments', component : DepartmentListComponent },
+{path : 'employees' , component : EmployeeListComponent}
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+								------> both are same 
+  exports: [RouterModule]
+})8197102102
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ JavaScript
+------------------ 
+  what is javascript ?
+  javascript is more popular and widly used in programming language in the world right now .
+  which person need to javascript --
+    1)Front - end - developer
+	2) Back - end - developer
+	3) Full - stack - developer
+	
+	
+  
+  what can you do with it ?
+  web/mobile apps   
+  Real - time Networking Apps
+  Command line tools 
+  Games 
+  where does JavaScript code run ?
+  JavaScript it can be run in only browser it can be required to javascript Engine (go to Diagram----1)
+   the javascript Engines like  go to diagram---2
+   Ex: FireFox :SpiderMonkey
+      Google Chrome : v8
+  JavaScript vs ECMAScript ?
+  ECMAScript																JavaScript
+  ECMAScript is a Specification     									JavaScript is Programming Language 
+  
+  JavaScript
+  -----------
+  
+  Goto Browser and right click and select the inspect and we can write the code in the that browser
+  go to Diagram----3 
+  console.log('Hello World '); when we can click the enter button we can get the output of the same console 
+ OUTPUT :
+  Hello World 
+  we can write the program directy here only that's one method here.
+  EX 2:
+  we can calculate the mathematical operations in the browser only simply we can write the that program
+  go to diagram--5
+  that console simply
+  2+2 we can enter here we can get the outPut of the 2+2 
+  4 directly we can get the out put of the application 
+  
+  we can write the alert function also that browser 
+  alert('Hello World'); we can click the enter button we can get the 
+  
+  // that console  
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+how can i merge the code the by using SVN 
+------------------------------------------
+Branching and Subversion of the SVN  ?
+---------------------------------
+   --> .svn       Branches
+   -->  tags      trunk 
+   go to diagram -- 1 
+   c
+   trunk folder --> right click on the trunk folder -->tortoiseSVN -->
+hee copy to trunk folder and paste to Branches folder -->SVN COPY and VERSIONED Item here --here it will be open the one dialouge box that dialauge box we can write any name of the name :
+the dialauge box is copy and rename: here am giving the name:add-theme-widing
+  right click and commit the file go to diagram--2
+  how to checkout the project -->on the application
+  open the add-theme-widing----->
+
+
+
+
+
+
+
+
+
+
+
+Cookies in Servlet -->
+Session means -->the interval between longin to log out is called session the period of the time 
+1) Cookies inn Servlet
+---------------------
+Defination of Cookie 
+   -> The small piece of information persisted between multiple client requests is know as Cookie 
+   
+   the following are the fields of Cookie:
+   
+      1)name 
+	  
+	  2) Value
+	  3) Optional attributes
+	      i) path
+		     ii)comment
+		4) Domain qualifierrs
+            1)age ii)versiion		
+			 
+Cookie is a class 
+------------			 
+			 -----------
+Serializable is a one of the Marker interface or taged interface do not havinng any methods of the thiis interface
+it's is available to making the our object as binary stream nothing but it's aliazable for the network travel 
+
+Clonable-->is supporting to the clonning process (Dubliecte object)
+class Cookie {
+signature of the Constructor within Cookie class :
+public javax.servlet.http.Cookie(java.lang.String,java.lang.String);
+//other methods used for Cookie Session Tracking process
+public void addCookie(Cookie ck)//
+public Cookie[] getCookie();
+Syntax for Create the Cookie:
+Cookie ck = new Cookie("name","value");// create cookie object 
+respone.addCookie(ck);//adding cookie in the responses
+//delete the cookie:
+Syntax is 
+
+Cookie ck = new Cookie("name","");// deletinng the cookie
+ck.setMaxAge(0);// changing the maximum age age of 0 (zero)second)
+response.addCookie(ck);//adding cookie in response 
+Syntax for getting the Cookies :
+-----------------------------------
+Cookie ck[] request.getCookies();
+CookieDemo <project_name>//
+----------------------------------
+http://localhost:8080/CookieDemo
+------------------------------------------------------------ 
+EX : we will take the one application 
+ that applicaation havaing 
+   Login     Logout     Profile
+    when click the login of the application when the Login is successfully then only the user can be see the profile of the that User Profile otherwise not see the user profile EX : we will take Naukri or Gamil any one we can login the applicaation after login we can see the profile of the user
+the user not login successfully then we can't see the user profile 	
+after we can logout the portal the cookie automatically distoried 
+
+Session Tracking 
+
+<servlet-mapping>
+  <servlet-name>LogoutServlet</servlet-name>
+  <url-pattern>/LogoutServlet</url-pattern>
+ </servlet-mapping>
+
+<welcome-file-list>
+  <welcome-file>inndex.html</welcome-file> 
+</welcome-file-list>
+</web-app>
+
+index.html
+-----
+<body>
+<a href="login.html">Login</a>  |
+<a href="LogoutServlet.html">Logout</a>  |
+<a href="ProfileServlet">Profile</a>  |
+</body>
+ Login.html
+ ----------
+ <form action="LoginServlet" method ="post">
+ Name : <input type="text" name ="name"/> <br>
+ Password :<input type="password" name="password"/></br>
+    <input type="submit" value="Login"/>
+	
+	
+	LoginServlet.java
+	------------------
+	public class LoginServlet extends HttpServlet {
+	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOExcepption{
+	respone.setContentType("text/html");
+	PrintWriter out = respone.getWriter();
+	request.getRequestDispatcher("link.html").include(request,respone);
+	String name = request.getParameter("name");
+	String password = request.getParameter("password");
+	  if(password.equals("admin123")){
+	  out.print("you are successfully loged in !");
+	  out.print("<br> Welcome, :"+name);
+	  Cookie ck = new Cookie("name",name);
+	  respone.addCookie(ck); // here add the Cookie (the cookie as the parameter
+// this cookie respospose will come  web broowser automatically come to the Cookie  also //here the cookie having the name as "name" 	
+respone come to web browser here having below method request.getRequestDispatcher("link.html")//here link.html page
+ //request.getRequestDispatcher("link.html").include(request,respone);  
+	  }
+	}  
+	link.html
+	---------
+<a href= "login.html">Login</a>
+<a href = "LogoutServlet">Logout</a>
+<a href = "ProfileServlet">Profile</a>
+</hr>
+
+
+ProfileServlet.java
+-----------------
+public class ProfileServlet extends HttpServlet{
+public void doPost(HttpServletRequest request,HttpServletResponse respone) throws ServletException,IOExcepption{
+respone.setContentType("text/html");
+PrintWriter out = respone.getWriter();
+request.getRequestDispatcher("link.html").include(request,respone);
+  Cookie ck[] = request.getCookies();//here having getCookie(); method here am getting the cookie inside here return type Cookie is an array 
+  // why the return type is array form of the Cookie 
+//EX Cookie[] // because of in the Cookie having the lot's of the data of the applicaation another means here LoginServlet class having and put the data in lot's that time it can put the one only single name of the cookie and the totally data it will comes to single name of the  of the  cookie that totally data it can read the ProfileServlet class that why here Cookie having array form   
+   if(ck!=null){String name=ck[0].getValue();
+   if(!name.equals("")||name!=null){
+   out.print("<b>Welcome to Profile </b>");
+   out.print("<br>Welcome ,:" +name);
+   }
+   else:out.println("please login first ");
+   request.getRequestDispatcher("login.html");
+
+}
+the ProfileServlet class it can be see the cookie is there or not on the browser 
+the browser having the cookie 
+the cookie having to come the request come to ProfileServlet as for the same request (ikkada manaku web browser lo chustundi Cookie unda leda ani ikkada cookie unte a cookie anedi ikkada manaku request ruppamlo vastundi kada ProfileServlet class kavuna manaku ikkada cookie anedi request form lo untudi) 
+
+LogoutServlet.java
+-----------------
+public class LoginServlet extends HttpServlet{
+public void doPost(HttpServletRequest request,HttpServletResponse respone) throws ServletException,IOExcepption{
+respone.setContentType("text/html");
+PrintWriter out = respone.getWriter();
+request.getRequestDispatcher("link.html").include(request,respone);
+
+Cookie ck = new Cookie("name","");//here not give the any name of the cookie that's why we can put only double quotes/("") only main this meaning is it can be delete the cookie here it's self only 
+here not give the any value of the cookie that time it can be delete the cookie automatically
+ck.setMaxAge(0);//here life time is zero(0)
+response.addCookie(ck); //deleting the cookie's in web browser 
+out.print("you are successfully loged out ");
+}
+}	
+	
+login to logout main state of the user 
+the process of maintaining the state of user from login to logout we are calling SessionTracking Management 
+
+
+2)Hidden form fields	
+Define Hidden form field of HTTP ?
+--> The form field of html of type of "hidden " is know as "Hidden form field which is not displayed on the web browser.
+(Invisible to endUser) 
+Syntax :
+ <form action="url" method ="post">
+   <input type="hidden" name=""/>
+ </form> 
+
+Note :
+The value of "Hidden" form field is used for tracking the user, which is know as "Hidden form field " Session Tracking Process. 
+FirstServlet.java
+-----------------
+public class FirstServlet extends HttpServlet{
+public void doPost(HttpServletRequest requset,HttpServletResponse response)throws ServletException,IOExcepption{
+respone.setContentType("text/html");
+PrintWriter out = response.getWriter();
+String n = request.getParameter("userName");
+  out.print("Welcome :"+n);
+  //creating form that have invisible text field
+  out.print("form action='servlet2' method='post'>");
+  out.print("<input type='hidden' name='uname' value='"+n+" '>'>;
+  out.print("<input type='submit' value='go'>");
+  out.print("</form>");
+  out.close();
+	}
+	catch(Exception ex){out,print(e);}
+	}
+}	
+
+public class SecondServlet extends HttpServlet{
+public void doPost(HttpServletRequest requset,HttpServletResponse response)throws ServletException,IOExcepption{
+respone.setContentType("text/html");
+PrintWriter out = response.getWriter();
+String n = request.getParameter("uname");
+		// getting the value from the hidden field
+		String name = request.getParameter("uname");
+		out.print("Hello",+name);
+		out.close();
+		}
+		catch(Exception ex){out.print(e);}
+
+		}
+	}
+	what is Hidden -->it can;t be see the end user whatever we can give the values of the applicaation
+	it can't be see the web broowser in by the end user it can be maintain the one value for tracking the user this know the SessionTracking Management
+http://localhost:8080/HiddenDemo
+go to diagram --hidden field related 
+3) URL re-writing 
+-------------------
+ the url am add some value/some information that information goes to one servlet program to  another servlet program on demand you can use the that information for tracking the user URL Re-Writing SessionTracking Management
+ Syntax :
+ usl?name=value1&value2&...
+-----------------------------
+public class FirstServlet extends HttpServlet{
+public void doPost(HttpServletRequest requset,HttpServletResponse response)throws ServletException,IOExcepption{
+respone.setContentType("text/html");
+PrintWriter out = response.getWriter();
+String n = request.getParameter("uname");
+out.print("Welcome"+n);
+out.print("<a href ='servlet2?uname="+n+"'>visit</a>");
+                      --------------this is paramerter name(uname="+n+this name this is url re-writing content
+					   
+//here having the servlet2? this is main the part  of the url part of the  appplication . 
+
+we can give the values based on the url pattern related data here the data it will come to related to url  pattern
+
+out.close();
+}
+catch(Exception ex){out.print(ex);}
+	}
+}
+
+ SecondServlet.java
+-------------------
+public class SecondServlet extends HttpServlet{
+public void doPost(HttpServletRequest requset,HttpServletResponse response)throws ServletException,IOExcepption{
+respone.setContentType("text/html");
+PrintWriter out = response.getWriter();
+String n = request.getParameter("uname");//out.print("<a href ='servlet2?uname="+n+"'>visit</a>");
+out.print("Hello "+n);
+out.close();
+}
+catch(Exception ex){out.print(ex);}}}
+
+http://localhos:8080/UrlDemo
+A Session is a unique identification number miantained between web client and web server
+
+
+
+Spring Boot application with JSP page relate 
+---------------------------------------------
+Diagram----spring boot with jsp --->
+-------------------------------------
+Required Things
+----------------
+1)main / client class
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringBootJSP {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringBootCoockies.class, args);
+		System.out.println("started");
+	}
+
+}
+2)Contrller class
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+// @RestController
+@Controller
+public class JSPController {
+	 
+    @RequestMapping(value="/welcome",method=RequestMethod.GET)
+    public ModelAndView printHello() {
+    	
+    	return new ModelAndView("welcome");
+    }
+	
+}
+
+3) applicarion.properties file
+------------------------------
+server.port=1111
+#this is jsp page and location of the jsp 
+#where the location of the jsp page of the application
+spring.mvc.view.prefix:/WEB-INF/jsp/
+spring.mvc.view.suffix:.jsp
+
+4) pom.xml
+---------------
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.20.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>spring.boot.cookie.app</groupId>
+	<artifactId>spring-boot-cookie-app.main</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>spring-boot-cookie-app.main</name>
+	<description> Spring BootCookie</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
+welcome.html
+-------------
+<h1>Welcome to Spring Boot Application with JSP page related </h1>
+
+ Structure of the applicarion
+ -----------------------------
+spring-boot-jsp-application
+      |
+	  |
+	  WEB-INF
+	    |
+		|
+		 jsp
+		   
+ above structure is internally it will follow the MVC architecture 
+structure of the original MVC architecture of the application
+--------------------------------------------------------------
+
+     spring-boot-jsp-application
+      |
+	  |
+	  |-->WEB-INF
+	  | 	|--> web.xml
+	  |		|-->lib
+	  |		|-->classes
+	  |
+	  |-->index.html
+	     
+	
+
+Spring Framework Session 
+--------------------------
+  Spring Boot Cookie application 
+  -------------------------------
+  Cookie saved in client side  but Session is saved in Server side  in the browser 
+  Read Http Cookie in Spring MVC
+  --------------------------------
+	Spring 3 MVC framework provides a very useful annotation '@CookieValue' to access data set within any http cookie.
+	This annotation can be leverage to fetch the cookie value without getting into hassle of fetching cookies from
+ http request and iterating through the list.
+	'@CookieValue' annotation can be used within Controller argument. 
+	It automatically bind the cookie value with method argument.
+	
+	Syntax
+	------
+	import org.springframework.web.bind.annotation.CookieValue;
+	import org.springframework.web.bind.annotation.RequestMapping;
+	//..
+	@RequestMapping("/hello.html")
+	public String hello(@CookieValue("foo") String fooCookie) {
+
+	//..
+	}
+
+	In above code snippet we defined a controller method hello() which is mapped to URL /hello.html. Also we bind the parameter String fooCookie using @CookieValue annotation. When spring maps the request, it checks http for cookie with name “foo” and bind its value to String fooCookie.
+
+No boiler plate code to iterate though list of cookies, just one line will do it all.
+
+One thing worth noting here is that we have not defined any default value for the String fooCookie. If Spring does not find the cookie with name “foo” in http request, it will throw an exception: java.lang.IllegalStateException: Missing cookie value ‘foo’ of type [java language=”.lang.String”][/java]
+  
+  Exception
+  ----------
+  java.lang.IllegalStateException: Missing cookie value 'foo' of type java.lang.String
+	at org.springframework.web.bind.annotation.support.HandlerMethodInvoker.raiseMissingCookieException(HandlerMethodInvoker.java:796)
+	at org.springframework.web.bind.annotation.support.HandlerMethodInvoker.resolveCookieValue(HandlerMethodInvoker.java:684)
+	at org.springframework.web.bind.annotation.support.HandlerMethodInvoker.resolveHandlerArguments(HandlerMethodInvoker.java:357)
+	at org.springframework.web.bind.annotation.support.HandlerMethodInvoker.invokeHandlerMethod(HandlerMethodInvoker.java:171)
+	at org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter.invokeHandlerMethod(AnnotationMethodHandlerAdapter.java:440)
+	at org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter.handle(AnnotationMethodHandlerAdapter.java:428)
+  
+how to solve the above the Exception
+------------------------------------
+In order to resolve this we must add default value to @CookieValue annotation so if Spring doesn’t find http cookie with that name, it binds the parameter with default value. Following is syntax for that:
+
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+//..
+@RequestMapping("/hello.html")
+public String hello(
+	@CookieValue(value = "foo", defaultValue = "hello") String fooCookie) {
+
+	//..
+}
+
+
+
+Setting Http Cookie in Spring MVC
+-------------------------------------
+We just saw how we can use @CookieValue annotation to auto-magically bind cookie value with a spring controller parameter.
+Now let us see how to set a cookie in a Spring MVC based application. For this actually we will use HttpServletResponse class’s method addCookie().
+ Spring does not provide any fancy way to set http cookie because it’s already taken care by servlets HttpServletResponse class. 
+ All you need to do it to use just one method addCookie(). 
+ Spring MVC can be used to get the response object. 
+ Once we have this object it’s just piece of cake.
+
+ Consider below code:
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+//..
+
+@RequestMapping("/hello.html")
+public String hello(HttpServletResponse response) {
+
+	response.addCookie(new Cookie("foo", "bar"));
+
+	//..		
+}
+
+//..
+
+
+In above code we just bind HttpServletResponse object to Spring method controller and used its addCookie method to save new Cookie.
+ That’s it. One line of code will do it.
+ One thing worth noticing here is that you can set the cookie expire time using setMaxAge method on Cookie class.
+																				------->here shows the life time of the Cookie /age of the Cookie
+	EX :
+	Cookie foo = new Cookie("foo", "bar"); //bake cookie
+foo.setMaxAge(1000); //set expire time to 1000 sec of the Coockies
+		
+response.addCookie(foo); //put cookie in response 
+	response.addCookie();// hee we can add the cookie here 
+	
+
+	Sample Application of the Cookies related spring boot with using jsp 
+	----------------------------------------------------------------------
+required things
+------------------
+1) Main/client applicaation 
+2) Controller 
+3) Jsp page
+4) pom.xml
+
+ Main/client applicaation 
+ --------------------------
+ SpringBootCoockies.java 
+ -------------------------
+ import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringBootCoockies {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringBootCoockies.class, args);
+		System.out.println("started");
+	}
+
+}
+
+Controller
+----------
+
+package spring.boot.cookie.app.springbootcookieapp.main.controller;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+// @RestController
+@Controller
+public class CookieController {
+	 
+    @RequestMapping(value="/welcome",method=RequestMethod.GET)
+    public ModelAndView printHello() {
+    	
+    	return new ModelAndView("welcome");
+    }
+    
+   //here we can Coockie programereted application
+    @RequestMapping(value="/index.htm")
+    public String hello(
+    		@CookieValue(value="hitCointer",defaultValue="0") Long hitCointer,HttpServletResponse response) {
+    	//increment hit counter
+    	hitCointer++;
+    	//create coockie and set it in sesponse
+    	Cookie cookie = new Cookie("hitCounter", hitCointer.toString());
+    	response.addCookie(cookie);
+    	// render heoolo.jsp page 
+    	return "hello";
+    	
+    }
+}
+
+hello.jsp
+---------
+ 	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
+<head>
+	<title>Spring MVC Cookie example</title>	
+</head>
+<body>
+
+	<h1>Spring MVC Cookie example</h1>
+
+	Page hit counter: <b> ${cookie.hitCounter.value} </b>
+
+</body>
+</html>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.20.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>spring.boot.cookie.app</groupId>
+	<artifactId>spring-boot-cookie-app.main</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>spring-boot-cookie-app.main</name>
+	<description> Spring BootCookie</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+
+we can give the input on the browser
+------------------------------------
+http://localhost:1111/index.htm
+outPut : 
+-------
+Spring MVC Cookie example
+
+Page hit counter: 1 
+The logic to fetch hit counter from cookie and set it back is written in HelloController. We used @CookieValue annotation to map hitCounter cookie to Long hitCounter parameter. Notice how we mapped java.lang.Long value. Spring automatically converts String from Cookie to Long value.
+
+Demo
+Open your favorite web browser and point to below URL:
+
+http://localhost:8080/Spring_Cookie_Example/hello.htm
+
+
+Refresh page 2-3 times and see how hit counter value is incremented
+(here each and every time it can be increase the number when refresh it the browser page 
+	first by default zero(0) it will come after it can hit the first on the broowser that time it can be increase the value that some issues are there inour application that's why my page but not increase that value 
+ you can observe the second application 
+ ---------------------------------------
+ 
+ 
+ package spring.boot.cookie.app.springbootcookieapp.main.controller;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+// @RestController
+@Controller
+public class CookieController {
+	 
+    @RequestMapping(value="/welcome",method=RequestMethod.GET)
+    public ModelAndView printHello() {
+    	
+    	return new ModelAndView("welcome");
+    }
+    
+   //here we can Coockie programereted application
+    @RequestMapping(value="/index.htm")
+    public String hello(
+    		@CookieValue(value="hitCointer",defaultValue="0") Long hitCointer,HttpServletResponse response) {
+    	//increment hit counter
+    	hitCointer++;
+    	//create coockie and set it in sesponse
+    	Cookie cookie = new Cookie("hitCounter", hitCointer.toString());
+    	response.addCookie(cookie);
+    	// render heoolo.jsp page 
+    	return "hello";
+   }
+   @RequestMapping(value="/secondcookie")
+    public String helloSecond(
+    		@CookieValue(value="hitCointer",defaultValue="0") Long hitCointer,HttpServletResponse response) {
+    	//increment hit counter
+    	hitCointer++;
+    	//create coockie and set it in sesponse
+    	Cookie cookie = new Cookie("hitCounter", hitCointer.toString());
+    	response.addCookie(cookie);
+    	// render heoolo.jsp page 
+    	return "hello2";
+    	
+    }
+   
+}
+
+hello.html page 
+-------------------
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<html>
+<head>
+<title>Spring MVC Cookie example</title>
+</head>
+<body>
+	<h1>Spring MVC Cookie example</h1>
+ 	Page hit counter: <b> ${cookie.hitCounter.value} </b>
+	<form action = "/secondcookie" method="get"/>
+		Name :<input name="firstName" type="text" value="Harry"/>
+		Password :<input name="lastName" type="text" value="Potter"/>
+    <input type="submit" value="GoCookie"/>
+    </form>
+
+Input on the browser
+----------------------
+http://localhost:1111/index.htm
+
+output :
+Name : [    ]
+Password : [ ] 
+ GoCookie  <--------we can click the here only when it can be hit the second method 
+
+ 
+ http://localhost:1111/secondcookie?firstName=Harry&lastName=Potter
+ 
+ Spring MVC Cookie example
+	Page hit counter: 1
+ 
+ --------------------------------------------------------------------------------------------------------
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ import attribute: This is one of the most used page directive attribute. It’s used to instruct container to import other java classes, interfaces, enums etc. while generating servlet code. This is similar to import statements in java classes, interfaces. An example of import page directive usage is:
+<%@ page import="java.util.Date,java.util.List,java.io.*" %>
+
+contentType attribute: This attribute is used to set the content type and character set of the response. The default value of contentType attribute is”text/html; charset=ISO-8859-1″. We can use it like below.
+<%@ page contentType="text/html; charset=US-ASCII" %>
+
+pageEncoding attribute: We can set response encoding type with this page directive attribute, its default value is “ISO-8859-1”.
+<%@ page pageEncoding="US-ASCII" %>
+
+extends attribute: This attribute is used to define the super class of the generated servlet code. This is very rarely used and we can use it if we have extended HttpServlet and overridden some of it’s implementations. For example;
+<%@ page extends="org.apache.jasper.runtime.HttpJspBase" %>
+
+info attribute: We can use this attribute to set the servlet description and we can retrieve it using Servlet interface getServletInfo() method. For example;
+<%@ page info="Home Page JSP" %>
+ 
+buffer attribute: We know that JspWriter has buffering capabilities, we can use this attribute to set the buffer size in KB to handle output generated by JSP page. Default value of buffer attribute is 8kb. We can define 16 KB buffer size as;
+<%@ page buffer="16kb" %>
+
+language attribute: language attribute is added to specify the scripting language used in JSP page. It’s default value is “java” and this is the only value it can have. May be in future, JSPs provide support to include other scripting languages like C++ or PHP too.
+<%@ page language="java" %>
+
+isELIgnored attribute: We can ignore the Expression Language (EL) in JSP using this page directive attribute. Its datatype is Java Enum and default value is false, so EL is enabled by default. We can instruct container to ignore EL using below directive;
+<%@ page isELIgnored="true" %>
+
+isThreadSafe attribute: We can use this attribute to implement SingleThreadModel interface in generated servlet. Its an Enum with default value as true. If we set it’s value to false, the generated servlet will implement SingleThreadModel and eventually we will loose all the benefits of servlet multi-threading features. You should never set it’s value to false.
+<%@ page isThreadSafe="false" %>
+
+errorPage attribute: This attribute is used to set the error page for the JSP, if the JSP throws exception, the request is redirected to the error handler defined in this attribute. It’s datatype is URI. For example;
+<%@ page errorPage="errorHandler.jsp" %>
+
+isErrorPage attribute: This attribute is used to declare that current JSP page is an error page. It’s of type Enum and default value is false. If we are creating an error handler JSP page for our application, we have to use this attribute to let container know that it’s an error page. JSP implicit attribute exception is available only to the error page JSPs. For example;
+<%@ page isErrorPage="true" %>
+
+autoFlush attribute: autoFlush attribute is to control the buffer output. Its default value is true and output is flushed automatically when buffer is full. If we set it to false, the buffer will not be flushed automatically and if it’s full, we will get exception for buffer overflow. We can use this attribute when we want to make sure that JSP response is sent in full or none. For example;
+<%@ page autoFlush="false" %>
+
+session attribute: By default JSP page creates a session but sometimes we don’t need session in JSP page. We can use this attribute to indicate compiler to not create session by default. It’s default value is true and session is created. To disable the session creation, we can use it like below.
+<%@ page session	="false" %>
+
+trimDirectiveWhitespaces attribute: This attribute was added in JSP 2.1 and used to strip out extra white spaces from JSP page output. Its default value is false. It helps in reducing the generated code size, notice the generate servlet code keeping this attribute value as true and false. You will notice no out.write("\n") when it’s true.
+<%@ page trimDirectiveWhitespaces	="true" %>	
+	
+JSP include directive
+------------------------
+JSP include directive is used to include the contents of another file to the current JSP page. The included file can be HTML, JSP, text files etc. Include directive is very helpful in creating templates for user views and break the pages into header, footer, sidebar sections.
+
+We can include any resource in the JSP page like below.
+
+<%@ include file="test.html" %>
+
+The file attribute value should be the relative URI of the resource from the current JSP page.
+
+JSP taglib directive
+----------------------
+JSP taglib directive is used to define a tag library with prefix that we can use in JSP, we will look into more details in JSP Custom Tags tutorial.
+
+We can define JSP tag libraries in like below;
+
+<%@ taglib uri="/WEB-INF/c.tld" prefix="c"%>
+
+JSP taglib directive is used in JSP standard tag libraries, please read JSTL Tutorial.
+
+Servlet in Forword and Include  
+-------------------------------
+forword() having RequestDispatcher(i) diagram-->forword 
+
+the first Servlet Program-1 take the request and 
+Program-1 take the request and forword the that request to another next resource Program-2(this second program having servlet/jsp/html any program 
+the second servlet program take the whatever giving the servlet first program related data and totally forword to respose page/result page of the applicaation.
+in the applicaation i will take one program is 'LoginServlet' in this class userName and password both are correct it can be forword to  Details to Data here the second Servlet is 'DisplayServlet' it can be 
+
+<web-app>
+ <servlet>
+  <servlet-name>LoginServlet</servlet-name>
+  <servlet-class>LoginServlet</servlet-class>
+ <servlet>
+ <servlet>
+  <servlet-name>DisplayServlet</servlet-name>
+  <servlet-class>DisplayServlet</servlet-class>
+ <servlet>
+ <servlet-mapping>
+   <servlet-name>LoginServlet</servlet>
+   <url-pattern>/login</url-pattern>
+ <servlet-mapping>
+<servlet-mapping>
+   <servlet-name>DisplayServlet</servlet>
+   <url-pattern>/dis</url-pattern>
+ <servlet-mapping>
+ <welcome-file-list>
+   <welcome-file>login.html</welcome-file>
+ </welcome-file-list>  
+</web-app>
+
+login.html
+----------
+<form action="login" method="post">
+UserName :<input type="text" name="uname"/>
+Password : <input type="password" name="pward"/>
+           <input type="submit" value = "Login"/>
+LoginServlet.java
+-------------------------		   
+		   
+public class LoginServlet extends HttpServlet {
+
+public void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOException{
+respone.setContentType("text/html");
+PwintWriter out = respone.getWriter();
+ String uname = request.getParameter("uname");
+ String pword = request.getParameter("pword");
+  try{
+  Class.forName("oracle.jdbc.driver.OracleDriver");
+  Connection con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE","system","admin");
+  PreparedStatement ps = con.prepareStatement("select *from Login where uname=? and pword=?");
+  ps.setString(1,uname);
+  ps.setString(2,pword);
+  ResultSet rs = ps.executeQuery();
+  if(rs.next()){
+  pw.println("Login Successful");
+  RequestDispatcher rd = req.getRequestDispatcher("dis");// this is URL of the applicaion second servlet /html/jsp page any page it ccan hit this is matching the url-pattern of the wex.xml page of the application
+  rd.forword(request,response);// this result are go to the second page and shows the result of the page of the application 
+  }//end of if condition
+   else{
+   out.println("invalid UserLogin");
+   RequestDispatcher rd = requestgetRequestDispatcher("login.html").include(request,response); //here display the 
+  result of the same page but not go to the another page or another servlet program only page it self showing the result
+or
+RequestDispatcher rd = requestgetRequestDispatcher("login.html");//here whatever page it can be give it can be hit the that perticular page of the applcation 
+rd.include(request,response); //here display the  
+   }
+  }
+  }
+  
+  
+  DisplayServlet.java
+  --------------------
+  public class DisplayServlet extends HttpServlet {
+
+public void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException,IOException{
+respone.setContentType("text/html");
+PwintWriter out = respone.getWriter();
+ String uname = request.getParameter("uname");
+ out.println("Welcome :"+unname);
+	}
+ }
+  
+
+
+
+
+
+
+
+
+Thats all for JSP directives, we will look into Expression Language (EL) and JSP Actions next.
+how to develop the web applcation for using spring framework 
+---------------------------------------------------------------- 
+ Mobile Phone Contact Numbers add and Delete the Numbers In User : 
+this applicaation is a multi user applicaation because of it's a website 
+Contact Application Requirement : BRD ( Business Requirement Document)
+--------------------------------------------------------------------------
+
+SR            TASK                                          		SCOPE
+------      -------------                                 		--------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+  1			Multi user applicaation 								IN             IN :Covered
+  2			Roles : User & Admin 									IN		OUT  : Not Covered (it cover in coming vides
+  3			User Registration 										IN
+  4			Login--User & Admin 									IN 
+  5			Logout--Uset & Admin									IN 
+  6 		Contact - Add 											IN
+  7			Edit Contact											IN
+  8			List Contact											IN
+  9 		Search Contact	(free text)								IN
+  10		Delete Contact --One by One 							IN
+  11		Delete Contact Bulk										IN
+  12		User and Admin - Profile Edit 							OUT
+  13		Contact Export/Import  --PDF ,XLXS,VCF,CSV				OUT
+  14		Admin can see all registred users   in					IN
+  15 		Admin can Block or Active any User 						IN
+  16 		Basic Security											IN
+reference Links :
+http://ezeon.in/blob/2014/03/software-development-process-how-to-initiate/
+http://www.ezeontech.com/process/software-development-process
+
+how flow important any project --spring framework applcation 3 flow of chat--1
+--------------------------------
+User al ready haved to account you can simply go to Login and not registration of the this application that user is new user is there (but not having any account of the this blog that time your go and registred the that blob and after registration once we can login the this blog )
+(user ki apude account unte amiledu leka pote registration form page ki poyi full full cheyali a tharavatha malli login kavali )
+here go to some diagrams (the diagrams are 2-5)project related here after see the 
+What is WireFrame ?
+-> WireFrame is a screen blueprint or prototype or mock desing
+-> Real feel of an application (web-pages)
+-> Easy to validate the idea developer is going to build (it can give some relatd ideas it can discuss the client and manger and TL and team persons)
+->Clear understanding of Navigation,Information Arrangement and Layout
+Navigation->how the pages are link each other and what page it will be opened and clear flow you can understand and also the arragement of the Information will be easy to work on the WireFraming and also it can be helping us Layout(
+Layout->how the website  Layout it will be design
+-> Easy to test the UX (User Exerience) 
+-> Improves the  Communication with different entities involved in project .
+-> Focus on Right placement of information(placed the information is correct or not )
+-> This can be designed using HTML or On Paper . Some tools can be used 
+
+				Spring Contact Application--Project Work
+				-----------------------------------------
+Contact Table related some pending is there please maku sure it can can fulfill the that table details
+
+after we can see the structure relateed flow chart of applicaation MCV -- > Application
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Spring Boot Microservices
+---------------------------
+-->Creating a few microservices
+-->Having them communicate with each other
+--> Interdependent concepts
+--> Why ?
+Creating a few microservices
+-------------------------------
+
+where do your start ?
+----------------------
+--> Lot's of Technologies
+--> Lots of patterns
+--> Interdependent concepts
+--> Why ?
+
+Monolith                Microservices
+---------     			----------------------
+Complexity hidden		Complexity between microservices
+
+meaning this complexity
+--------------------------
+What is an example of a pattern and technology ? wht's the difference ?
+-->Patterns -->Make microservices work well togather
+--> Technologies -->Libraries and frameworks to solve common problems
+
+What is the Difference between Microservices and web servies ?----> doubt ?
+
+in this course 
+-----------------
+--> We start from scrach 
+--> Pick one "set" of technologies - Spring could 
+--> Use only what's required 
+
+Prerequisites
+----------------
+--> JAVA
+--> Spring Boot
+Diagram----2
+Ex: 
+
+Movie Catalog API Application based on Spring boot Sample Application 
+Diagram----3
+this means above diagram it will take the UI Developers of the applicaation
+
+my movie catalog.com /api/kousik
+{
+  id : Kousik
+  name : Kousik k
+   movies : [
+        { id : 1234,name:--,desc:--,rating :3},
+		{ id : 500, name :--,desc :--, rating:5},
+		{----},
+		
+		]
+	Diagram----4
+	 hee we can show the diagram first microservice is give the details of movie catalog related service related information 
+	  EX :
+	  Movie Catalog service
+	   Input  : userId
+	   OutPut : Movie List with date
+	 the second microservice is give the details of movie information service 
+		Movie Info Services
+		Input : MovieId
+		OutPut : Movie Details
+		third microservice is having Rating relatd information
+		
+		now 
+1) Create 3 Spring Boot Projects
+2) Build moviie catalog service Api
+3) Build movie info Service Api
+4) Build ratings Data service Api
+5) Having movie catalog service call the other two service(the naive why )	
+
+Q ) it's possible to have the end client directly call the individual microservice and catalog the data on the client side ?	
+A ) it' possible to call 
+
+Strp 1:
+------
+     Creating the 3 Services 
+	 -----------------------
+  go to spting-boot initilizer  we can create the sample application here we can create 3 projects 
+
+spring-boot-microservic-movie-catalog-service-app (this is first project) required jar is only web only 
+
+Add an API to movie-catalog-service at /catalog/{userId} that returns a hard-coded list of movie + rating information
+Starting state commit : 01  Init 3 Projects
+Compition state  Commit 02 Added movie catalog API 
+http://localhost:9999/catalog/foo (here userId daggara amaina ivvavachu (we can give the value of {userId} related bind data we can give here only call the that data only and fetch the that data ony 
+manin programmer
+SpringBootMicroservicMovieCatalogServiceAppApplication.java
+------------------------------------------------------------
+package spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringBootMicroservicMovieCatalogServiceAppApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringBootMicroservicMovieCatalogServiceAppApplication.class, args);
+		System.out.println("started");
+	}
+
+}
+CatalogItem.java
+-----------------------
+package spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp.model;
+
+public class CatalogItem {
+	private String namme;
+	private String desc;
+	private int rating;
+	public String getNamme() {
+		return namme;
+	}
+	public void setNamme(String namme) {
+		this.namme = namme;
+	}
+	public String getDesc() {
+		return desc;
+	}
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+	public int getRating() {
+		return rating;
+	}
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+	@Override
+	public String toString() {
+		return "CatalogItem [namme=" + namme + ", desc=" + desc + ", rating=" + rating + "]";
+	}
+	public CatalogItem(String namme, String desc, int rating) {
+		super();
+		this.namme = namme;
+		this.desc = desc;
+		this.rating = rating;
+	}
+	
+}
+MovieCatelogResource.java
+-------------------------------
+package spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp.resources;
+
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp.model.CatalogItem;
+
+@RestController
+@RequestMapping("/catalog")
+public class MovieCatelogResource {
+
+	@RequestMapping("/{userId}")
+	public List<CatalogItem> getCatalog(@PathVariable("userId") String userId){
+		
+		return Collections.singletonList(
+				 new CatalogItem("TransForms", "test",4)
+				 );
+		
+	}
+}
+URL of the application ( on the browser)
+---------------------
+http://localhost:9999/catalog/foo
+OutPut : [{"namme":"TransForms","desc":"test","rating":4}]
+this dummy API this only spring boot normal applicaation only 
+Does the second microservice have to another spring boot applicaation could we have used anothe framework/technology instead ?
+
+second application of spring boot application 
+-----------------------------------------------
+package spring.boot.microservices.info.springbootmicroservicmovieinfoapp;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringBootMicroservicMovieInfoAppApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringBootMicroservicMovieInfoAppApplication.class, args);
+		System.out.println("second Movie server start");
+	}
+
+}
+
+package spring.boot.microservices.info.springbootmicroservicmovieinfoapp.models;
+
+public class Movie {
+	private String movieId;
+	private String name;
+	public String getMovieId() {
+		return movieId;
+	}
+	public void setMovieId(String movieId) {
+		this.movieId = movieId;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Movie(String movieId, String name) {
+		super();
+		this.movieId = movieId;
+		this.name = name;
+	}
+	
+	
+
+}
+
+
+
+package spring.boot.microservices.info.springbootmicroservicmovieinfoapp.resources;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import spring.boot.microservices.info.springbootmicroservicmovieinfoapp.models.Movie;
+
+@RestController
+@RequestMapping("/movies")
+public class MovieResource {
+	
+	@RequestMapping("/{movieId}")
+	public Movie getMovieInfo(@PathVariable("movieId") String movieId) {
+		return new Movie(movieId,"Test name");
+	}
+
+}
+
+Input on url: http://localhost:8888/movies/1001 
+output : {"movieId":"1001","name":"Test name"}
+
+kousikkthagal/spring-boot-microservices-workshop ---->in git hup we can get the scorce code of the application
+here each one having the one port number 
+above both are not a microservices bot are different spring boot applicaations only 
+
+3rd applicaation also here 
+package spring.boot.microservices.info.springbootmicroservicmovieinfoapp.resources;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import spring.boot.microservices.info.springbootmicroservicmovieinfoapp.models.Movie;
+
+@RestController
+@RequestMapping("/movies")
+public class MovieResource {
+	
+	@RequestMapping("/{movieId}")
+	public Movie getMovieInfo(@PathVariable("movieId") String movieId) {
+		return new Movie(movieId,"Test name");
+	}
+
+}
+package spring.boot.microservices.rating.springbootmicroservicmovieratingapp.model;
+
+public class Rating {
+private String movieId;
+private int rating;
+public Rating(String movieId, int rating) {
+	this.movieId=movieId;
+	this.rating=rating ;
+}
+public String getMovieId() {
+	return movieId;
+}
+public void setMovieId(String movieId) {
+	this.movieId = movieId;
+}
+public int getRating() {
+	return rating;
+}
+public void setRating(int rating) {
+	this.rating = rating;
+}
+
+}
+
+package spring.boot.microservices.rating.springbootmicroservicmovieratingapp.resources;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import spring.boot.microservices.rating.springbootmicroservicmovieratingapp.model.Rating;
+
+@RestController
+@RequestMapping("/ratingsdata")
+public class RatingResource {
+
+	@RequestMapping("/{movieId}")
+	public Rating getRating(@PathVariable("movieId") String movieId) {
+		return new Rating(movieId,4);
+	}
+}
+
+input to browser :http://localhost:7777/ratingsdata/1234
+OutPut : {"movieId":"1234","rating":4}
+
+above three application are now not a spring boot microservices but here only three independent  applcations only that applicaations related to normal spring boot applications
+ 
+above having 3 spring boot applicaations but not having any relationship of the any applicaation 
+
+What we have now  ?
+diagram --> spring boot monolith and microservices--4 Movie not related ,.png
+ 
+ first we can calling the Movie Info applicaation to Movie Catalog applicaation 
+ how to communicate  with Movie Info Service Application to Movie Catalog Service Application
+ how to make a REST call from your code ?
+  
+ --> Calling REST APIs Programatically
+ --> Using a REST client library
+ --> Spring Boot comes with a client already in your classpath- RestTemplate 
+  //get all rated movie IDs // this is hard code here
+		// this is second modifivcation code 
+
+  // for each movie ID , call movie info service and get details
+		//put the, all togather
+		//here each and every thing in hardcode only 
+
+above three applications are merge into the single application by using RestTemplate class 
+above three applications we can keep one file 
+Catalog.java
+Movie.java
+Rating.java 
+in Catalog appplication 
+we can see the structure of the application--5
+
+package spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp.resources;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp.model.CatalogItem;
+import spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp.model.Movie;
+import spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp.model.Rating;
+
+@RestController
+@RequestMapping("/catalog")
+public class MovieCatelogResource {
+
+	@RequestMapping("/{userId}")
+	public List<CatalogItem> getCatalog(@PathVariable("userId") String userId){
+		RestTemplate restTemplate = new RestTemplate();
+		//here main work in unmarsell consepts here
+		//get all rated movie IDs // this is hard code here
+		// this is second modifi vcation code 
+		List<Rating> ratings = Arrays.asList(
+				new Rating("1234", 4),
+				new Rating("5678",3)
+				);
+		
+		return ratings.stream()
+				.map(rating -> {
+				Movie movie=restTemplate.getForObject("http://localhost:8888/movies/1001"+rating.getMovieId(), Movie.class); //here working marslling concept
+				return new CatalogItem(movie.getName(), "Desc", rating.getRating());
+				
+				}).collect(Collectors.toList());
+		/*
+return ratings.stream().
+				map(rating-> 
+				new CatalogItem("TransForms", "test", 4)).collect(Collectors.toList());
+		*/    	 
+		     
+		// for each movie ID , call movie info service and get details
+		//put the, all togather
+		//here each and every thing in hardcode only 
+		
+	/*	// this is first time we can writing the code 
+	 * return Collections.singletonList(
+				 new CatalogItem("TransForms", "test",4)
+				 );
+	*/	
+	}
+}
+this application having the more changes are there 
+and we can call the applicaation
+Input : http://localhost:9999/catalog/Raja
+OutPut : [{"namme":"Test name","desc":"Desc","rating":4},{"namme":"Test name","desc":"Desc","rating":3}]
+here two servers are running 
+above applcation mandotary the Movie Constructure main without Constructure we can get the error at run time 
+
+
+
+
+
+
+package spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp.resources;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp.model.CatalogItem;
+import spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp.model.Movie;
+import spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp.model.Rating;
+
+@RestController
+@RequestMapping("/catalog")
+public class MovieCatelogResource {
+
+	@RequestMapping("/{userId}")
+	public List<CatalogItem> getCatalog(@PathVariable("userId") String userId){
+		RestTemplate restTemplate = new RestTemplate();
+		//here main work in unmarsell consepts here
+		//get all rated movie IDs // this is hard code here
+		// this is second modifi vcation code 
+		List<Rating> ratings = Arrays.asList(
+				new Rating("1234", 4),
+				new Rating("5678",3)
+				);
+		
+		return ratings.stream()
+				.map(rating -> {
+				Movie movie=restTemplate.getForObject("http://localhost:8888/movies/"+rating.getMovieId(), Movie.class); //here working marslling concept // above applicaation and this applicaation having this difference only //above http://localhost:8888/movies/1001
+EX: return ratings.stream()
+				.map(rating -> {
+				Movie movie=restTemplate.getForObject("http://localhost:8888/movies/1001"+rating.getMovieId(), Movie.class); //here working marslling concept
+				return new CatalogItem(movie.getName(), "Desc", rating.getRating());
+		now giving the url
+return ratings.stream()
+				.map(rating -> {
+				Movie movie=restTemplate.getForObject("http://localhost:8888/movies/"+rating.getMovieId(), Movie.class); 	.. here automatically comes to the rating.getMovieId() number	
+				}).collect(Collectors.toList());
+				giving the this url now we can giving the url 
+				return new CatalogItem(movie.getName(), "Desc", rating.getRating());
+				
+				}).collect(Collectors.toList());
+				Input URL : http://localhost:9999/catalog/Raja
+				OutPut : [{"namme":"Test name","desc":"Desc","rating":4},{"namme":"Test name","desc":"Desc","rating":3}]
+		// http://localhost:8888/movies/1001
+		/*
+return ratings.stream().
+				map(rating-> 
+				new CatalogItem("TransForms", "test", 4)).collect(Collectors.toList());
+		*/    	 
+		     
+		// for each movie ID , call movie info service and get details
+		//put the, all togather
+		//here each and every thing in hardcode only 
+		
+	/*	// this is first time we can writing the code 
+	 * return Collections.singletonList(
+				 new CatalogItem("TransForms", "test",4)
+				 );
+	*/	
+	}
+}
+
+Spring by default is Singleton class
+-------------------------------------
+package spring.boot.microservices.springbootmicroservicmoviecatalogserviceapp;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class SpringBootMicroservicMovieCatalogServiceAppApplication {
+	@Bean
+	public RestTemplate getRestTemplate();
+	public static void main(String[] args) {
+		SpringApplication.run(SpringBootMicroservicMovieCatalogServiceAppApplication.class, args);
+		System.out.println("started");
+	}
+
+	how to import the xml file in spring boot application 
+	------------------------------------------------------
+	
+import springframework.hello.HelloBean;
+ 
+public class XmlBean implements HelloBean {
+    @Override
+    public void sayHello() {
+        System.out.println("Hello, I'm a XML Bean");
+    }
+}
+	here in spring bean using xml configuration 
+spring-config.xml
+	-----------------
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="xmlBean" class="springframework.xml.XmlBean"/>
+</beans>	
+	
+
+	above xml file how to load the that file to  in spring boot application
+	
+package springframework.xml;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ImportResource;
+
+@SpringBootApplication
+@ImportResource("classpath*:spring/spring-config.xml")// this is it can be load the xml file 
+public class XmlApplication {
+    public static void main(String[] args) {
+        ApplicationContext ctx = SpringApplication.run(XmlApplication.class, args);
+        XmlBean bean = (XmlBean) ctx.getBean("xmlBean"); // this bean it can inject the configuration of the xml file 
+        bean.sayHello();
+    }
+}
+	
+	
+	
+	
+}
+C
+
+
+
+
+
+
+
+
+
+
+
+how to setting multiple module maven project for spring boot 
+------------------------------------------------------------
+	create new project in maven (this is Main Module of the application )
+	file -->new-->others-->moven-->Maven Project (this is main of the our application)
+	    GroupId  : com.mxexample
+		Artifactid :mxexample-app
+		version :0.0.1.SNAPSHOT
+		packaging  : pom
+		
+		finish 
+		
+ pina manamu mamulu project ni select chesukunnamu but now 	we can select the some other modules 
+
+file-->new -->others-->maven-->Maven Module -->next
+ it will open the one dialauge box that box having the 
+ New Maven Module 
+ it will select the one check box of the 
+ --> Create a Single project (skip archytype selectors)
+   Module Name : mxexample-api  (this is sub module of the application )(here parent module is 
+   Parent module : mxexample-app (this is our parent module of the applicaation (and this is base module name of the application    
+            click next every thing is fine we can click next and next finish 
+	 here also we can create the one more module of the application 
+  file -->new -->others--> Maven Module --> 
+     module Name : mxexample-service 
+	 Parent Project : mxexample-app 
+	structure of the application
+   ------------------------------
+       mxexample-app (parent module)
+			|
+			|
+			|
+		mxexample-api (child module )
+			diagram --- > spring boot parent to child create the sub modules in pom page 
+			
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+ 
+
+
+
+
+
+
+
+
+
+
+  
+			
+			
+
+
+
+
+
+
+how to change the java compiler in maven
+---------------------------------------
+	Right click on the project --> select java compiler and slect the java 8/9/10 whatever we can required the version 
+that version we can select and click ok buttion
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GCF (the greatest common factor )
+10--->1,2,5  both wat is the greatest comman facor is 5 it's come to twice   we need to identify the that number 
+15--->1,3,5
+
+Logic 
+-----
+36--->1,2,3,4,6,9,12,36-->here am forget the 18 also
+60--->1,2,3,4,6,10,12,20,-->here am forget the 5,15,30,60 
+  
+  algorithm--is Euclidean  -->go to diagram -->based on GCF
+  -------------------------
+
+
+
+
+
+
+3) Url Rewriting 
+4)HTTPSession
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+internally how to working the ArrayList and StringBuiler or StringBuffer both are same capacit having that's why it can be calculate the both classes are only single here classes which formula it can used 
+-----------------------------------------------------------------------------------------
+ArrayList capacity formula : int newCapacity = (oldCapacity * 3)/2 + 1;
+ArrayList by default capacity is 10 
+StringBuilder capacity formula : (16*2)+2=34 i.e (oldcapacity*2)+2
+StringBuilder by default capacity is 16  
+EX:
+StringBuffer capacity() method
+----------------------------------
+The capacity() method of StringBuffer class returns the current capacity of the buffer. The default capacity of the buffer is 16. If the number of character increases from its current capacity, it increases the capacity by (oldcapacity*2)+2. For example if your current capacity is 16, it will be (16*2)+2=34.
+StringBuffer ensureCapacity() method
+--------------------------------------
+The ensureCapacity() method of StringBuffer class ensures that the given capacity is the minimum to the current capacity. If it is greater than the current capacity, it increases the capacity by (oldcapacity*2)+2. For example if your current capacity is 16, it will be (16*2)+2=34.
+
+Right shift and Left shift and Right shift filled  with Zero operator in java sample programe
+------------------------------------------------------------------------------------------------
+class ShiftOperator{
+public static void main(String args[]){
+// Right shift and Left shift and Right shift filled  with Zero operator in java sample programe
+ int a =2;
+ system.out.println(a<<1); // result is 4
+ //here internal process 
+ /** here process in binary operations here I'm using left shift right that's why every bit it can be shifted into left side only 
+ //automatically converted to the 32 bit automatically
+   01 (2*1+0*0=2+0=2
+    EX 2 :
+	int a =2
+	System.out.println(a<<1);
+	100 -->(2*2+0*1+0*0) = 4 result here it can be shifted to double of the operator 
+	result is 8
+	main theam is 
+	we will take 2 here 
+	
+	int x = 2;
+	System.out.println(x<<1);
+	
+	but internally process here 
+	2  --> it can be automatically converted in 32 bits of the operations 
+	0000 0000 0000 0000 0000 0000 0000  0010 -->this way to converted in here
+	here the 2 result is 0010 kavuna 
+	ikkada manamu internal process telusukunnam
+	0010 here am using left shift operator by one(1) kavuna one value it can be movie to left side one position only   
+	0100 this is that position only after shifting this position it can be get the result 
+	0*3+2*2+0*1+0*0==>0+4+0+0 = 4 is the result 
+	
+	EX 2 :
+	int x = 2;
+	System.out.println(x<<2);
+    2  --> it can be automatically converted in 32 bits of the operations 
+	0000 0000 0000 0000 0000 0000 0000  0010 -->this way to converted in here
+	here the 2 result is 0010 kavuna 
+    main 2 result is 0010 but here using left shift operator in 2 -- here it can moved to left side of the 2 movies
+                     1000 above ---> 2*3+0*2+0*1+0*0 ==> 8 +0+0+0 == 8
+  Daigram -->left shift operator example	
+package com.shift.operations;
+
+public class LeftshiftOpretor {
+	public static void main(String[] args) {
+		int x = 2;
+		System.out.println(x<<1);
+		System.out.println(x<<2);
+		System.out.println(x<<3);
+  // what is use of listshift operator anaga ikkada manaku 	
+		int y = -10;
+		System.out.println(y>>1);
+		System.out.println(y>>2);
+   int z= 8;
+       System.out.println(z>>1); // here it will come output :4
+    System.out.println(z>>>2);// output:2 // here it can be movie to the 2nd move to the 2 right moves directly only 
+	 int a= 16;
+       System.out.println(z>>1); // here it will come output :8 it can be move to only one shift to right side only 
+    System.out.println(z>>>3);// output:2 // here it can be movie to the 2nd move to the 2 right moves directly only 
+	
+		 
+		}
+}
+
+   
+*/
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+Q ) what transient key word  ?
+	---------------------
+1) transient is a one of the  modifier in java
+2) just converting object state to persistant state is called as a Serialization 
+  diagram ---> go to serialization diagram 
+ in the process of serialization if we want to hide  some the details of object state such type variables is called as a transient variables 
+ 4) transient variables will not participate the in procees of serialization 
+ 5) If we can declare the any variable as a transient that variable will not perticipate the serialization of the process 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
